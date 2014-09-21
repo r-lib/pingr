@@ -27,7 +27,6 @@
 #include <Windows.h>
 #include <WinSock2.h>
 #include <time.h>
-#include "gettimeofday.h"
 #else                   // Linux specific
 
 #include <sys/socket.h>
