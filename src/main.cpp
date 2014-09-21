@@ -1,68 +1,71 @@
 #include "standard.h"
 
+#include <R.h>
+
 using namespace std;
+using namespace ping;
 
-namespace ping {
+extern "C" {
 
-int		exitCode	= 0;
-stats_c	stats;
+ int r_ping_main(const char *Destination, int Port, int Type,
+		 int Continuous, int Count, int Timeout,
+		 double *Values) {
 
-int main(const char *Destination, int Port, int Type, bool Continous,
-	 int Count, int Timeout) {
+    host_c host;
+    stats_c stats;
+    int result;
+    int exitCode;
 
-  host_c		host;
-	int			result;
+    if (Type == 0) { Type = IPPROTO_TCP; } else { Type = IPPROTO_UDP; }
 
-	stats.Attempts	= 0;
-	stats.Connects	= 0;
-	stats.Failures	= 0;
-	stats.Minimum	= 0.0;
-	stats.Maximum	= 0.0;
-	stats.Total		= 0.0;
+    stats.Attempts = 0;
+    stats.Connects = 0;
+    stats.Failures = 0;
+    stats.Minimum  = 0.0;
+    stats.Maximum  = 0.0;
+    stats.Total    = 0.0;
 
-	result = socket_c::Resolve(Destination, host);
+    result = socket_c::Resolve(Destination, host);
 
-	if (result == SUCCESS)
-	{
-		socket_c::SetPortAndType(Port, Type, host);
+    if (result == SUCCESS) {
+      socket_c::SetPortAndType(Port, Type, host);
+    }
 
-	}
+    unsigned int i = 0;
 
-	unsigned int	i		= 0;
+    double time = 0.0;
 
-	double			time	= 0.0;
+    while (1) {
+      result = socket_c::Connect(host, Timeout, time);
 
-	while (Continous || i < (unsigned int)Count)
-	{
-		result = socket_c::Connect(host, Timeout, time);
+      stats.Attempts++;
 
-		stats.Attempts++;
+      if (result == SUCCESS) {
+        stats.Connects++;
+        stats.Total += time;
+        stats.UpdateMaxMin(time);
+	Values[i] = time;
 
-		if (result == SUCCESS)
-		{
-			stats.Connects++;
-			stats.Total += time;
-			stats.UpdateMaxMin(time);
+      } else {
+        exitCode = 1;
+        stats.Failures++;
+	Values[i] = -1;
+      }
 
-		}
-		else
-		{
-			exitCode = 1;
-			stats.Failures++;
+      R_CheckUserInterrupt();
 
-		}
+      i++;
+      if (! Continuous && i == (unsigned int) Count) { break; }
 
-		#ifdef WIN32	// Windows cannot sleep to that accuracy (I think!)
-			if ((int)time < 1000) Sleep((1000 - (int)time));
-		#else
-			if ((int)time < 1000) usleep((1000 - (int)time) * 1000);
-		#endif
+#ifdef WIN32    // Windows cannot sleep to that accuracy (I think!)
+      if ((int)time < 1000) Sleep((1000 - (int)time));
+#else
+      if ((int)time < 1000) usleep((1000 - (int)time) * 1000);
+#endif
 
-		i++;
-	}
+    }
 
+    return exitCode;
+  }
 
-	return exitCode;
-	}
-
-} // namespace
+} // extern C

@@ -2,16 +2,15 @@
 
 namespace ping {
 
-class timer_c
-{
-		public:
-			void	Start();
-			double	Stop();
+  class timer_c {
+  public:
+    void        Start();
+    double      Stop();
 
-		private:
-			bool	hasValue_;
-			timeval	start_;
-			timeval	stop_;
-};
+  private:
+    bool        hasValue_;
+    timeval     start_;
+    timeval     stop_;
+  };
 
 }

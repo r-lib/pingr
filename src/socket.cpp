@@ -4,150 +4,146 @@ using namespace std;
 
 namespace ping {
 
-int socket_c::Resolve(pcc_t hostname, host_c &host)
-{
-	hostent*	remoteHost	= NULL;
+  int socket_c::Resolve(pcc_t hostname, host_c &host) {
+    hostent*    remoteHost      = NULL;
 
-	#ifdef WIN32	// Init Winsock in Windows
-		WSADATA	wsaData;
-		if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) return ERROR_SOCKET_GENERALFAILURE;
-	#endif
+#ifdef WIN32    // Init Winsock in Windows
+    WSADATA     wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+      return ERROR_SOCKET_GENERALFAILURE;
+    }
+#endif
 
-	remoteHost = gethostbyname(hostname);
+    remoteHost = gethostbyname(hostname);
 
-	#ifdef WIN32	// Cleanup Winsock in Windows
-		WSACleanup();
-	#endif
+#ifdef WIN32    // Cleanup Winsock in Windows
+    WSACleanup();
+#endif
 
-	if (remoteHost == NULL) return ERROR_SOCKET_CANNOTRESOLVE;
+    if (remoteHost == NULL) return ERROR_SOCKET_CANNOTRESOLVE;
 
-	host.IPAddress	= *(in_addr*)remoteHost->h_addr_list[0];
-	host.Hostname	= remoteHost->h_name;
+    host.IPAddress      = *(in_addr*)remoteHost->h_addr_list[0];
+    host.Hostname       = remoteHost->h_name;
 
-	host.HostIsIP = !strcmp(hostname, host.Hostname);
+    host.HostIsIP = !strcmp(hostname, host.Hostname);
 
-	return SUCCESS;
-}
-
-
-int socket_c::SetPortAndType(int port, int type, host_c &host)
-{
-	host.Port	= port;
-	host.Type	= type;
-
-	return SUCCESS;
-}
+    return SUCCESS;
+  }
 
 
-pcc_t socket_c::GetFriendlyTypeName(int type)
-{
-	switch (type)
-	{
-		case IPPROTO_TCP:
-			return "TCP";
-		case IPPROTO_UDP:
-			return "UDP";
-		default:
-			return "UNKNOWN";
-	}
-}
+  int socket_c::SetPortAndType(int port, int type, host_c &host) {
+    host.Port   = port;
+    host.Type   = type;
+
+    return SUCCESS;
+  }
 
 
-int socket_c::GetSocketType(int type)
-{
-	switch (type)
-	{
-		case IPPROTO_UDP:
-			return SOCK_DGRAM;
-		default:
-			return SOCK_STREAM;
-	}
-}
+  pcc_t socket_c::GetFriendlyTypeName(int type) {
+    switch (type) {
+    case IPPROTO_TCP:
+      return "TCP";
+    case IPPROTO_UDP:
+      return "UDP";
+    default:
+      return "UNKNOWN";
+    }
+  }
 
 
-int socket_c::Connect(host_c host, int timeout, double &time)
-{
-	int		result	= 0;
-	int		clientSocket;
+  int socket_c::GetSocketType(int type) {
+    switch (type) {
+    case IPPROTO_UDP:
+      return SOCK_DGRAM;
+    default:
+      return SOCK_STREAM;
+    }
+  }
 
 
-	#ifdef WIN32	// Init Winsock in Windows
-		WSADATA	wsaData;
-		if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) return ERROR_SOCKET_GENERALFAILURE;
-	#endif
-
-	clientSocket = socket(AF_INET, socket_c::GetSocketType(host.Type), host.Type);
-
-	if (clientSocket == -1) return ERROR_SOCKET_GENERALFAILURE;
-
-	sockaddr_in	clientAddress;
-
-	clientAddress.sin_addr		= host.IPAddress;
-	clientAddress.sin_family	= AF_INET;
-	clientAddress.sin_port		= htons(host.Port);
-
-	timeval	tv;
-	
-	// No blocking for Windows/Linux
-	#ifdef WIN32
-		ULONG	mode = 1;
-		ioctlsocket(clientSocket, FIONBIO, &mode);
-	#else
-		long arg = fcntl(clientSocket, F_GETFL, host.Type);
-		arg = fcntl(clientSocket, F_SETFL, arg | O_NONBLOCK);
-	#endif
+  int socket_c::Connect(host_c host, int timeout, double &time) {
+    int         result  = 0;
+    int         clientSocket;
 
 
-	tv.tv_sec 	= 0;
-	tv.tv_usec	= timeout * 1000;
+#ifdef WIN32    // Init Winsock in Windows
+    WSADATA     wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+      return ERROR_SOCKET_GENERALFAILURE;
+    }
+#endif
 
-	timer_c	timer;
+    clientSocket = socket(AF_INET, socket_c::GetSocketType(host.Type),
+                          host.Type);
 
-	timer.Start();		
+    if (clientSocket == -1) return ERROR_SOCKET_GENERALFAILURE;
 
-	connect(clientSocket, (sockaddr*)&clientAddress, sizeof(clientAddress));
+    sockaddr_in clientAddress;
 
-	fd_set	read, write;
+    clientAddress.sin_addr     = host.IPAddress;
+    clientAddress.sin_family   = AF_INET;
+    clientAddress.sin_port     = htons(host.Port);
 
-	FD_ZERO(&read);
-	FD_ZERO(&write);
+    timeval     tv;
 
-	FD_SET(clientSocket, &read);
-	FD_SET(clientSocket, &write);
-	
-	result = select(clientSocket + 1, &read, &write, NULL, &tv);
-	
-	if (result != 1)
-	{
-		close(clientSocket);
+    // No blocking for Windows/Linux
+#ifdef WIN32
+    ULONG       mode = 1;
+    ioctlsocket(clientSocket, FIONBIO, &mode);
+#else
+    long arg = fcntl(clientSocket, F_GETFL, host.Type);
+    arg = fcntl(clientSocket, F_SETFL, arg | O_NONBLOCK);
+#endif
 
-		#ifdef WIN32	// Cleanup Winsock in Windows
-			WSACleanup();
-		#endif
 
-		return ERROR_SOCKET_TIMEOUT;
-	}
+    tv.tv_sec   = timeout / 1000000;
+    tv.tv_usec  = timeout % 1000000;
 
-	time		= timer.Stop();
+    timer_c     timer;
 
-	if (!FD_ISSET(clientSocket, &read) && !FD_ISSET(clientSocket, &write))
-	{
-		close(clientSocket);
+    timer.Start();
 
-		#ifdef WIN32	// Cleanup Winsock in Windows
-			WSACleanup();
-		#endif
+    connect(clientSocket, (sockaddr*)&clientAddress, sizeof(clientAddress));
 
-		return ERROR_SOCKET_TIMEOUT;
-	}
+    fd_set      read, write;
 
-	close(clientSocket);
+    FD_ZERO(&read);
+    FD_ZERO(&write);
 
-	#ifdef WIN32	// Cleanup Winsock in Windows
-		WSACleanup();
-	#endif
+    FD_SET(clientSocket, &read);
+    FD_SET(clientSocket, &write);
 
-	return SUCCESS;
-}
+    result = select(clientSocket + 1, &read, &write, NULL, &tv);
+
+    if (result != 1) {
+      close(clientSocket);
+
+#ifdef WIN32    // Cleanup Winsock in Windows
+      WSACleanup();
+#endif
+
+      return ERROR_SOCKET_TIMEOUT;
+    }
+
+    time                = timer.Stop();
+
+    if (!FD_ISSET(clientSocket, &read) && !FD_ISSET(clientSocket, &write)) {
+      close(clientSocket);
+
+#ifdef WIN32    // Cleanup Winsock in Windows
+      WSACleanup();
+#endif
+
+      return ERROR_SOCKET_TIMEOUT;
+    }
+
+    close(clientSocket);
+
+#ifdef WIN32    // Cleanup Winsock in Windows
+    WSACleanup();
+#endif
+
+    return SUCCESS;
+  }
 
 } // namespace
