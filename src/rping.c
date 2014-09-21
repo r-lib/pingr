@@ -121,6 +121,7 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
 
     i++;
     if (!continuous && i == count) { break; }
+    R_CheckUserInterrupt();
 
     /* No, wait a bit then */
 
