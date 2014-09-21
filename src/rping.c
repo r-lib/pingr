@@ -2,12 +2,31 @@
 #include <R.h>
 #include <Rdefines.h>
 
+#ifdef WIN32
+
+#  define WIN32_LEAN_AND_MEAN
+#  include <winsock2.h>
+#  define close closesocket
+#  pragma comment(lib, "ws2_32.lib")
+
+#  define WINSTARTUP() if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {	\
+    error("Cannot initialize network");					\
+  }
+
+#  define WINCLEANUP() WSACleanup()
+
+#else
+
+#  include <sys/socket.h>
+#  include <sys/select.h>
+#  include <unistd.h>
+#  define WINSTARTUP()
+#  define WINCLEANUP()
+#endif
+
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/select.h>
 #include <sys/time.h>
 #include <netdb.h>
-#include <unistd.h>
 
 SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
 	    SEXP p_count, SEXP p_timeout) {
@@ -22,6 +41,10 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
   const char *host_name;
   int is_ip;
   int i = 0;
+
+#ifdef WIN32
+  WSADATA wsaData;
+#endif
 
   /* ---------------------------------------------------------------- */
   /* Check arguments                                                  */
@@ -50,11 +73,15 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
   /* Resolve host                                                     */
   /* ---------------------------------------------------------------- */
 
+  WINSTARTUP();
+
   remote_host = gethostbyname(destination);
   if (!remote_host) { error("Cannot resolve host name"); }
   host_name = remote_host->h_name;
   is_ip = !strcmp(host_name, destination);
   ip_address = *(struct in_addr*) remote_host->h_addr_list[0];
+
+  WINCLEANUP();
 
   /* ---------------------------------------------------------------- */
   /* Main ping loop                                                   */
@@ -70,14 +97,19 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
     double t_start, t_stop;
     struct sockaddr_in c_address;
     fd_set read, write;
-    int ret;
+    int c_socket, ret;
     double time;
 
-    int c_socket = socket(AF_INET,
-			  type == IPPROTO_UDP ? SOCK_DGRAM : SOCK_STREAM,
-			  type);
+    WINSTARTUP();
 
-    if (c_socket == -1) { error("Cannot connect to host"); }
+    c_socket = socket(AF_INET,
+		      type == IPPROTO_UDP ? SOCK_DGRAM : SOCK_STREAM,
+		      type);
+
+    if (c_socket == -1) {
+      WINCLEANUP();
+      error("Cannot connect to host");
+    }
 
     c_address.sin_addr = ip_address;
     c_address.sin_family = AF_INET;
@@ -116,6 +148,7 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
     REAL(result)[i] = time;
 
     close(c_socket);
+    WINCLEANUP();
 
     /* Are we done? */
 
