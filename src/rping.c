@@ -6,6 +6,7 @@
 
 #  define WIN32_LEAN_AND_MEAN
 #  include <winsock2.h>
+#  include <windows.h>
 #  define close closesocket
 
 #  define WINSTARTUP() if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {	\
@@ -13,6 +14,16 @@
   }
 
 #  define WINCLEANUP() WSACleanup()
+
+void usleep(__int64 usec) {
+  HANDLE timer;
+  LARGE_INTEGER ft;
+  ft.QuadPart = -(10*usec);
+  timer = CreateWaitableTimer(NULL, TRUE, NULL);
+  SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+  WaitForSingleObject(timer, INFINITE);
+  CloseHandle(timer);
+}
 
 #else
 
