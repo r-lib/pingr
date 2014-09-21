@@ -1,2 +1,6 @@
 ^\.travis\.yml$
 ^tags$
+^Makefile$
+^appveyor.yml$
+^.travis.yml$
+^README.Rmd$
