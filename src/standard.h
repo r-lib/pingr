@@ -1,4 +1,6 @@
-#pragma once
+
+#ifndef PING_STANDARD_H
+#define PING_STANDARD_H
 
 #ifdef WIN32
 #define close   closesocket
@@ -50,3 +52,5 @@ typedef unsigned short ushort_t;
 #include "timer.h"
 #include "host.h"
 #include "socket.h"
+
+#endif
