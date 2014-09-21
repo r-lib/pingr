@@ -7,7 +7,6 @@
 #  define WIN32_LEAN_AND_MEAN
 #  include <winsock2.h>
 #  define close closesocket
-#  pragma comment(lib, "ws2_32.lib")
 
 #  define WINSTARTUP() if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {	\
     error("Cannot initialize network");					\
@@ -20,13 +19,13 @@
 #  include <sys/socket.h>
 #  include <sys/select.h>
 #  include <unistd.h>
+#  include <netdb.h>
 #  define WINSTARTUP()
 #  define WINCLEANUP()
 #endif
 
 #include <sys/types.h>
 #include <sys/time.h>
-#include <netdb.h>
 
 SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
 	    SEXP p_count, SEXP p_timeout) {
