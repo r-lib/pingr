@@ -71,7 +71,7 @@ ping_os <- function(destination, continuous, count, timeout) {
   if (.Platform$OS.type == "windows") {
     ping_file <- file.path("C:", "windows", "system32", "ping.exe")
     if (!file.exists(ping_file)) { ping_file <- "ping" }
-    cmd <- ping_file %+% " -W " %+% chr(int(timeout * 1000))
+    cmd <- ping_file %+% " -w " %+% chr(int(timeout * 1000))
     if (continuous) {
       cmd <- cmd %+% " -t"
     } else {
