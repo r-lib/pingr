@@ -23,7 +23,7 @@ ping_port <- function(destination, port = 80L,
                       continuous = FALSE, count = 3L, timeout = 1.0) {
 
   type <- "tcp"
-  type <- switch(match.arg(type), "tcp" = 0L, "udp" = 1L)
+  type <- switch(type, "tcp" = 0L, "udp" = 1L)
   timeout <- as.integer(timeout * 1000000)
   res <- .Call("r_ping", destination, port, type, continuous, count, timeout,
                PACKAGE = "ping")
