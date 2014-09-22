@@ -1,9 +1,9 @@
 
 #' Check if a remote computer is up
 #'
-#' @useDynLib ping
+#' @useDynLib pingr
 #' @docType package
-#' @name ping-package
+#' @name pingr-package
 NULL
 
 #' Check if a port of a server is active, measure response time

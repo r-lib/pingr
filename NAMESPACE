@@ -2,4 +2,4 @@
 
 export(ping)
 export(ping_port)
-useDynLib(ping)
+useDynLib(pingr)

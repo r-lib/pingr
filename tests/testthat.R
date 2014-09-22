@@ -1,4 +1,4 @@
 library(testthat)
-library(ping)
+library(pingr)
 
-test_check("ping")
+test_check("pingr")

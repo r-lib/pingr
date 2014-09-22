@@ -8,12 +8,12 @@ knitr::opts_chunk$set(
   fig.height = 8)
 ```
 
-# ping: check if a server is alive
+# pingr: check if a server is alive
 
 [![Linux Build Status](https://travis-ci.org/gaborcsardi/ping.png?branch=master)](https://travis-ci.org/gaborcsardi/ping)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/4vvet9e6irj06g1w)](https://ci.appveyor.com/project/gaborcsardi/ping)
 
-The ping package is a simple utility that can be used to check
+The pingr package is a simple utility that can be used to check
 if a remote machine is running, by sending network packets to it.
 It is similar to the command line `ping` program, in fact for ICMP
 packages it just calls `ping`.
@@ -23,7 +23,7 @@ packages it just calls `ping`.
 The `ping()` function does ICMP ping, via the system's `ping` utility:
 
 ```{r}
-library(ping)
+library(pingr)
 ping("127.0.0.1")
 ```
 
