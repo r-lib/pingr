@@ -12,7 +12,7 @@ NULL
 #' @param port Port.
 #' @param continuous Logical, whether to keep pinging until
 #'   the user interrupts.
-#' @param verbose Whether to print progress on the screenw while
+#' @param verbose Whether to print progress on the screen while
 #'   pinging.
 #' @param count Number of pings to perform.
 #' @param timeout Timeout, in seconds. How long to wait for a
@@ -43,6 +43,8 @@ ping_port <- function(destination, port = 80L,
 #' @param destination Host name or IP address.
 #' @param continuous Logical, whether to keep pinging until the
 #'   user interrupts.
+#' @param verbose Whether to print progress on the screen while
+#'   pinging.
 #' @param count Number of pings to perform.
 #' @param timeout Timeout for a ping response.
 #' @return Vector of response times. \code{NA} means no response, in
@@ -51,12 +53,16 @@ ping_port <- function(destination, port = 80L,
 #'
 #' @export
 
-ping <- function(destination, continuous = FALSE, count = 3L,
-                 timeout = 1.0) {
+ping <- function(destination, continuous = FALSE, verbose = continuous,
+                 count = 3L, timeout = 1.0) {
+
+  if (!continuous && verbose) {
+    stop("'!continuous' && 'verbose' does not work currently")
+  }
 
   os <- ping_os(destination, continuous, count, timeout)
 
-  output <- suppressWarnings(system(os$cmd, intern = ! continuous))
+  output <- suppressWarnings(system(os$cmd, intern = ! verbose))
 
   if (!continuous) {
     timings <- grep(os$regex, output, value = TRUE, perl = TRUE)
