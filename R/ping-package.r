@@ -26,7 +26,7 @@ ping_port <- function(destination, port = 80L,
   type <- switch(type, "tcp" = 0L, "udp" = 1L)
   timeout <- as.integer(timeout * 1000000)
   res <- .Call("r_ping", destination, port, type, continuous, count, timeout,
-               PACKAGE = "ping")
+               PACKAGE = "pingr")
   res[ res == -1 ] <- NA_real_
   res
 }

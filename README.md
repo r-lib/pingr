@@ -3,8 +3,8 @@
 
 # pingr: check if a server is alive
 
-[![Linux Build Status](https://travis-ci.org/gaborcsardi/ping.png?branch=master)](https://travis-ci.org/gaborcsardi/ping)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/4vvet9e6irj06g1w)](https://ci.appveyor.com/project/gaborcsardi/ping)
+[![Linux Build Status](https://travis-ci.org/gaborcsardi/pingr.png?branch=master)](https://travis-ci.org/gaborcsardi/pingr)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/8utjqf4dsiy5nywp)](https://ci.appveyor.com/project/gaborcsardi/pingr)
 
 The pingr package is a simple utility that can be used to check
 if a remote machine is running, by sending network packets to it.
@@ -22,7 +22,7 @@ ping("127.0.0.1")
 ```
 
 ```
-#> [1] 0.037 0.143 0.087
+#> [1] 0.047 0.152 0.039
 ```
 
 By default it sends three packets and measures the time it receives and answer.
@@ -35,7 +35,7 @@ ping("127.0.0.1", count = 1)
 ```
 
 ```
-#> [1] 0.045
+#> [1] 0.041
 ```
 
 If a machine is down (or it does not exist), then `NA` is returned instead
@@ -61,5 +61,5 @@ ping_port("www.google.com", port = 80, count = 1)
 ```
 
 ```
-#> [1] 23.8
+#> [1] 23.06
 ```
