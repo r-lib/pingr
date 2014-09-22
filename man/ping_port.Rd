@@ -3,15 +3,13 @@
 \alias{ping_port}
 \title{Check if a port of a server is active, measure response time}
 \usage{
-ping_port(destination, port = 80L, type = c("tcp", "udp"),
-  continuous = FALSE, count = 3L, timeout = 1)
+ping_port(destination, port = 80L, continuous = FALSE, count = 3L,
+  timeout = 1)
 }
 \arguments{
 \item{destination}{Host name or IP address.}
 
 \item{port}{Port.}
-
-\item{type}{Protocol, \sQuote{tcp} or \sQuote{udp}.}
 
 \item{continuous}{Logical, whether to keep pinging until
 the user interrupts.}
