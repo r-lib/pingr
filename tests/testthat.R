@@ -1,4 +1,6 @@
 library(testthat)
 library(pingr)
 
-test_check("pingr")
+if (Sys.getenv("NOT_CRAN") != "") {
+  test_check("pingr")
+}
