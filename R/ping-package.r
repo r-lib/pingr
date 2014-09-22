@@ -53,7 +53,7 @@ ping <- function(destination, continuous = FALSE, count = 3L,
 
   os <- ping_os(destination, continuous, count, timeout)
 
-  output <- system(os$cmd, intern = ! continuous)
+  output <- suppressWarnings(system(os$cmd, intern = ! continuous))
 
   if (!continuous) {
     timings <- grep(os$regex, output, value = TRUE, perl = TRUE)
