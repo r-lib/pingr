@@ -18,7 +18,7 @@ the user interrupts.}
 
 \item{count}{Number of pings to perform.}
 
-\item{timeout}{Timeout, in milliseconds. How long to wait for a
+\item{timeout}{Timeout, in seconds. How long to wait for a
 ping to succeed.}
 }
 \value{
