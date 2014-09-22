@@ -14,7 +14,7 @@ ping_port(destination, port = 80L, continuous = FALSE,
 \item{continuous}{Logical, whether to keep pinging until
 the user interrupts.}
 
-\item{verbose}{Whether to print progress on the screenw while
+\item{verbose}{Whether to print progress on the screen while
 pinging.}
 
 \item{count}{Number of pings to perform.}
