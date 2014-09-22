@@ -31,6 +31,7 @@ void usleep(__int64 usec) {
 #  include <sys/select.h>
 #  include <unistd.h>
 #  include <netdb.h>
+#  include <arpa/inet.h>
 #  define WINSTARTUP()
 #  define WINCLEANUP()
 #endif
@@ -39,12 +40,12 @@ void usleep(__int64 usec) {
 #include <sys/time.h>
 
 SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
-	    SEXP p_count, SEXP p_timeout) {
+	    SEXP p_verbose, SEXP p_count, SEXP p_timeout) {
 
   SEXP result;
 
   const char *destination;
-  int port, type, continuous, count, timeout;
+  int port, type, continuous, verbose, count, timeout;
 
   struct in_addr ip_address;
   struct hostent *remote_host = NULL;
@@ -68,6 +69,7 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
   if (LENGTH(p_continuous) != 1) {
     error("continuous must be a logical scalar");
   }
+  if (LENGTH(p_verbose) != 1) { error("verbose must be a logical scalar"); }
   if (LENGTH(p_count) != 1) { error("type must be a numeric scalar"); }
   if (LENGTH(p_timeout) != 1) { error("type must be a numeric scalar"); }
 
@@ -76,6 +78,7 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
   type = INTEGER(AS_INTEGER(p_type))[0];
   if (type == 0) { type = IPPROTO_TCP; } else { type = IPPROTO_UDP; }
   continuous = INTEGER(AS_INTEGER(p_continuous))[0];
+  verbose = INTEGER(AS_INTEGER(p_verbose))[0];
   count = INTEGER(AS_INTEGER(p_count))[0];
   timeout = INTEGER(AS_INTEGER(p_timeout))[0];
 
@@ -92,6 +95,11 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
   ip_address = *(struct in_addr*) remote_host->h_addr_list[0];
 
   WINCLEANUP();
+
+  if (verbose) {
+    Rprintf("TCP PING %s (%s) Port:\n", destination, inet_ntoa(ip_address),
+	    port);
+  }
 
   /* ---------------------------------------------------------------- */
   /* Main ping loop                                                   */
@@ -159,6 +167,15 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
 
     close(c_socket);
     WINCLEANUP();
+
+    if (verbose) {
+      if (ISNA(time)) {
+	Rprintf("Request timeout for package %i\n", i + 1);
+      } else {
+	Rprintf("From %s: ping=%i time=%.3f ms\n", destination,
+		i + 1, time);
+      }
+    }
 
     /* Are we done? */
 

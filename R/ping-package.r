@@ -12,6 +12,8 @@ NULL
 #' @param port Port.
 #' @param continuous Logical, whether to keep pinging until
 #'   the user interrupts.
+#' @param verbose Whether to print progress on the screenw while
+#'   pinging.
 #' @param count Number of pings to perform.
 #' @param timeout Timeout, in seconds. How long to wait for a
 #'   ping to succeed.
@@ -20,13 +22,14 @@ NULL
 #' @export
 
 ping_port <- function(destination, port = 80L,
-                      continuous = FALSE, count = 3L, timeout = 1.0) {
+                      continuous = FALSE, verbose = continuous,
+                      count = 3L, timeout = 1.0) {
 
   type <- "tcp"
   type <- switch(type, "tcp" = 0L, "udp" = 1L)
   timeout <- as.integer(timeout * 1000000)
-  res <- .Call("r_ping", destination, port, type, continuous, count, timeout,
-               PACKAGE = "pingr")
+  res <- .Call("r_ping", destination, port, type, continuous, verbose,
+               count, timeout, PACKAGE = "pingr")
   res[ res == -1 ] <- NA_real_
   res
 }
