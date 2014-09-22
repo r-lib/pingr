@@ -10,7 +10,6 @@ NULL
 #'
 #' @param destination Host name or IP address.
 #' @param port Port.
-#' @param type Protocol, \sQuote{tcp} or \sQuote{udp}.
 #' @param continuous Logical, whether to keep pinging until
 #'   the user interrupts.
 #' @param count Number of pings to perform.
@@ -20,9 +19,10 @@ NULL
 #'
 #' @export
 
-ping_port <- function(destination, port = 80L, type = c("tcp", "udp"),
+ping_port <- function(destination, port = 80L,
                       continuous = FALSE, count = 3L, timeout = 1.0) {
 
+  type <- "tcp"
   type <- switch(match.arg(type), "tcp" = 0L, "udp" = 1L)
   timeout <- as.integer(timeout * 1000000)
   res <- .Call("r_ping", destination, port, type, continuous, count, timeout,
