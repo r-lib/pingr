@@ -9,7 +9,7 @@ test_that("We can ping localhost", {
 
   ## Start web server
   try(tools::startDynamicHelp(start = FALSE), silent = TRUE)
-  tools::startDynamicHelp()
+  suppressMessages(tools::startDynamicHelp())
   pr <- ping_port("127.0.0.1", port = tools:::httpdPort, count = 1)
   expect_true(is.double(pr))
   expect_true(length(pr) == 1)
