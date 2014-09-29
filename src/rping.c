@@ -32,12 +32,14 @@ void usleep(__int64 usec) {
 #  include <unistd.h>
 #  include <netdb.h>
 #  include <arpa/inet.h>
+#  include <fcntl.h>
 #  define WINSTARTUP()
 #  define WINCLEANUP()
 #endif
 
 #include <sys/types.h>
 #include <sys/time.h>
+#include <errno.h>
 
 SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
 	    SEXP p_verbose, SEXP p_count, SEXP p_timeout) {
@@ -138,8 +140,16 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
 
     gettimeofday(&start, NULL);
 
-    connect(c_socket, (const struct sockaddr*) &c_address,
-	    sizeof(c_address));
+    /* Set non-blocking */
+    if (fcntl(c_socket, F_SETFL, O_NONBLOCK) < 0) {
+      error("Cannot set socket to non-blocking");
+    }
+
+    ret = connect(c_socket, (const struct sockaddr*) &c_address,
+		  sizeof(c_address));
+    if (ret < 0 && errno != EINPROGRESS) {
+      error("Cannot connect");
+    }
 
     FD_ZERO(&read);
     FD_ZERO(&write);
