@@ -119,3 +119,35 @@ ping_os <- function(destination, continuous, count, timeout) {
 
   list(cmd = cmd, regex = "^.*time=(.+)[ ]?ms.*$")
 }
+
+## Domains and IPs to test for internet connection
+
+internet_domains <- c("google-public-dns-a.google.com",
+                      "b.resolvers.Level3.net")
+
+internet_ips <- c("8.8.8.8",
+                  "4.2.2.2")
+
+#' Is the computer online?
+#'
+#' Ping some name servers that are always (well, almost) up.
+#' If these are unreachable, then you are most probably not online.
+#'
+#' @param timeout Timeout for the pings.
+#' @return Possible values: \itemize{
+#'   \item \code{TRUE} Yes, online.
+#'   \item \code{FALSE} No, not online.
+#'   \item \code{"nodns"} We re online, but without a DNS service.
+#' }
+#'
+#' @export
+
+is_online <- function(timeout = 0.2) {
+  for (domain in internet_domains) {
+    if (!is.na(ping(domain, count = 1, timeout = timeout))) { return(TRUE) }
+  }
+  for (ip in internet_ips) {
+    if (!is.na(ping(ip, count = 1, timeout = timeout))) { return("nodns") }
+  }
+  return(FALSE)
+}
