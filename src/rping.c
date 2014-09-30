@@ -119,6 +119,9 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
     fd_set read, write;
     int c_socket, ret;
     double time;
+#ifdef WIN32
+    u_long imode = 1;
+#endif
 
     WINSTARTUP();
 
@@ -141,15 +144,24 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
     gettimeofday(&start, NULL);
 
     /* Set non-blocking */
+#ifdef WIN32
+    ioctlsocket(c_socket, FIONBIO, &imode);
+#else
     if (fcntl(c_socket, F_SETFL, O_NONBLOCK) < 0) {
       error("Cannot set socket to non-blocking");
     }
+#endif
 
     ret = connect(c_socket, (const struct sockaddr*) &c_address,
 		  sizeof(c_address));
-    if (ret < 0 && errno != EINPROGRESS) {
-      error("Cannot connect");
-    }
+
+#ifdef WIN32
+    ret = WSAGetLastError();
+    if (ret != WSAEWOULDBLOCK & ret != 0) { error("Cannot connect"); }
+
+#else
+    if (ret < 0 && errno != EINPROGRESS) { error("Cannot connect"); }
+#endif
 
     FD_ZERO(&read);
     FD_ZERO(&write);
