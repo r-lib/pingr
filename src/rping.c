@@ -52,7 +52,6 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
   struct in_addr ip_address;
   struct hostent *remote_host = NULL;
   const char *host_name;
-  int is_ip;
   int i = 0;
 
 #ifdef WIN32
@@ -93,7 +92,6 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
   remote_host = gethostbyname(destination);
   if (!remote_host) { error("Cannot resolve host name"); }
   host_name = remote_host->h_name;
-  is_ip = !strcmp(host_name, destination);
   ip_address = *(struct in_addr*) remote_host->h_addr_list[0];
 
   WINCLEANUP();
@@ -157,7 +155,7 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
 
 #ifdef WIN32
     ret = WSAGetLastError();
-    if (ret != WSAEWOULDBLOCK & ret != 0) { error("Cannot connect"); }
+    if (ret != WSAEWOULDBLOCK && ret != 0) { error("Cannot connect"); }
 
 #else
     if (ret < 0 && errno != EINPROGRESS) { error("Cannot connect"); }
