@@ -8,9 +8,13 @@ test_that("We can ping localhost", {
   expect_equal(pr, NA_real_)
 
   ## Start web server
-  try(tools::startDynamicHelp(start = FALSE), silent = TRUE)
-  suppressMessages(tools::startDynamicHelp())
-  pr <- ping_port("127.0.0.1", port = tools:::httpdPort, count = 1)
+  r_httpd_port <- if(R.version[["svn rev"]] < 67550) {
+    try(tools::startDynamicHelp(TRUE), silent=TRUE);
+    getFromNamespace("httpdPort", "tools");
+  } else {
+    tools::startDynamicHelp(NA);
+  }
+  pr <- ping_port("127.0.0.1", port = r_httpd_port, count = 1)
   expect_true(is.double(pr))
   expect_true(length(pr) == 1)
   expect_true(pr < 1000)
