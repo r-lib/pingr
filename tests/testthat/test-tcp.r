@@ -9,10 +9,10 @@ test_that("We can ping localhost", {
 
   ## Start web server
   r_httpd_port <- if(R.version[["svn rev"]] < 67550) {
-    try(tools::startDynamicHelp(TRUE), silent=TRUE);
-    getFromNamespace("httpdPort", "tools");
+    try(tools::startDynamicHelp(TRUE), silent = TRUE)
+    getFromNamespace("httpdPort", "tools")
   } else {
-    tools::startDynamicHelp(NA);
+    tools::startDynamicHelp(NA)
   }
   pr <- ping_port("127.0.0.1", port = r_httpd_port, count = 1)
   expect_true(is.double(pr))
