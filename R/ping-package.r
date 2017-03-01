@@ -1,7 +1,7 @@
 
 #' Check if a remote computer is up
 #'
-#' @useDynLib pingr
+#' @useDynLib pingr, .registration = TRUE, .fixes = "C_"
 #' @docType package
 #' @name pingr-package
 NULL
