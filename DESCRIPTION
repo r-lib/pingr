@@ -1,6 +1,6 @@
 Package: pingr
 Title: Check If a Remote Computer is Up
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: "Gabor Csardi <csardi.gabor@gmail.com> [aut,cre]"
 Description: Check if a remote computer is up. It can either
     just call the system ping command, or check a specified
