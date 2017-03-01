@@ -1,5 +1,5 @@
 Package: pingr
-Title: Check If a Remote Computer is Up
+Title: Check if a Remote Computer is Up
 Version: 1.1.1
 Authors@R: person(given = "Gábor", family = "Csárdi", role = c("aut", "cre"),
              email = "csardi.gabor@gmail.com")
