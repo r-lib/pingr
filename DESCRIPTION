@@ -1,7 +1,8 @@
 Package: pingr
 Title: Check If a Remote Computer is Up
 Version: 1.1.1
-Authors@R: "Gábor Csárdi <csardi.gabor@gmail.com> [aut,cre]"
+Authors@R: person(given = "Gábor", family = "Csárdi", role = c("aut", "cre"),
+             email = "csardi.gabor@gmail.com")
 Description: Check if a remote computer is up. It can either
     just call the system ping command, or check a specified
     TCP port.
