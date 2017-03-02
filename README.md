@@ -5,7 +5,7 @@
 
 [![Linux Build Status](https://travis-ci.org/gaborcsardi/pingr.svg?branch=master)](https://travis-ci.org/gaborcsardi/pingr)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/github/gaborcsardi/pingr?svg=true)](https://ci.appveyor.com/project/gaborcsardi/pingr)
-[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/pingr)](http://cran.r-project.org/web/packages/pingr/index.html)
+[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/pingr)](https://r-pkg.org/pkg/pingr)
 
 
 The pingr package is a simple utility that can be used to check
