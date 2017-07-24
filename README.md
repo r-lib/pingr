@@ -3,8 +3,8 @@
 
 # pingr: check if a server is alive
 
-[![Linux Build Status](https://travis-ci.org/gaborcsardi/pingr.svg?branch=master)](https://travis-ci.org/gaborcsardi/pingr)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/gaborcsardi/pingr?svg=true)](https://ci.appveyor.com/project/gaborcsardi/pingr)
+[![Linux Build Status](https://travis-ci.org/r-lib/pingr.svg?branch=master)](https://travis-ci.org/r-lib/pingr)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/r-lib/pingr?svg=true)](https://ci.appveyor.com/project/gaborcsardi/pingr)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/pingr)](https://r-pkg.org/pkg/pingr)
 
 

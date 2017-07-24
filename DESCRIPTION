@@ -8,8 +8,8 @@ Description: Check if a remote computer is up. It can either
     TCP port.
 License: MIT + file LICENSE
 LazyData: true
-URL: https://github.com/gaborcsardi/pingr
-BugReports: https://github.com/gaborcsardi/pingr/issues
+URL: https://github.com/r-lib/pingr#readme
+BugReports: https://github.com/r-lib/pingr/issues
 Suggests:
     testthat
 RoxygenNote: 6.0.1
