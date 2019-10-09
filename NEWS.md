@@ -3,6 +3,11 @@
 
 * New `is_up()` function to check if a web (other other TCP) server is up.
 
+* Timeout now works correctly on Linux systems (#7).
+
+* `ping()` uses processx now to run the external ping program, so the
+  the ping error messages do not litter the R console (#8, #9).
+
 # 1.1.2
 
 No user visible changes.
