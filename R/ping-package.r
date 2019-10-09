@@ -101,7 +101,7 @@ ping_os <- function(destination, continuous, count, timeout) {
   } else if (.Platform$OS.type == "unix") {
     cmd <- c(
       "ping",
-      "-W" %+% int(timeout * 1000),
+      "-W", int(timeout * 1000),
       if (!continuous) c("-c", count),
       destination
     )
