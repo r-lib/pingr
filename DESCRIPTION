@@ -13,6 +13,8 @@ BugReports: https://github.com/r-lib/pingr/issues
 Suggests:
     covr,
     testthat
+Imports:
+    processx
 RoxygenNote: 6.1.99.9001
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8

@@ -53,6 +53,7 @@ ping_port <- function(destination, port = 80L,
 #'   and not in their correct position.
 #'
 #' @export
+#' @importFrom processx run
 
 ping <- function(destination, continuous = FALSE, verbose = continuous,
                  count = 3L, timeout = 1.0) {
@@ -63,7 +64,8 @@ ping <- function(destination, continuous = FALSE, verbose = continuous,
 
   os <- ping_os(destination, continuous, count, timeout)
 
-  output <- suppressWarnings(system(os$cmd, intern = ! verbose))
+  status <- run(os$cmd[1], os$cmd[-1], error_on_status = FALSE)
+  output <- strsplit(status$stdout, "\r?\n")[[1]]
 
   if (!continuous) {
     timings <- grep(os$regex, output, value = TRUE, perl = TRUE)
@@ -81,41 +83,28 @@ ping_os <- function(destination, continuous, count, timeout) {
   if (.Platform$OS.type == "windows") {
     ping_file <- file.path("C:", "windows", "system32", "ping.exe")
     if (!file.exists(ping_file)) { ping_file <- "ping" }
-    cmd <- ping_file %+% " -w " %+% chr(int(timeout * 1000))
-    if (continuous) {
-      cmd <- cmd %+% " -t"
-    } else {
-      cmd <- cmd %+% " -n " %+% chr(count)
-    }
-    cmd <- cmd %+% " " %+% destination
+    cmd <- c(
+      ping_file,
+      "-w", int(timeout * 1000),
+      if (continuous) "-t" else c("-n", count),
+      destination
+    )
 
   } else if (Sys.info()["sysname"] == "Darwin") {
-    cmd <- "/sbin/ping " %+% "-W " %+% chr(int(timeout * 1000))
-    if (!continuous) cmd <- cmd %+% " -c " %+% chr(count)
-    cmd <- cmd %+% " " %+% destination
+    cmd <- c(
+      "/sbin/ping",
+      "-W", int(timeout * 1000),
+      if (!continuous) c("-c", count),
+      destination
+    )
 
   } else if (.Platform$OS.type == "unix") {
-    cmd <- "ping " %+% "-W " %+% chr(int(timeout * 1000))
-    if (!continuous) cmd <- cmd %+% " -c " %+% chr(count)
-    cmd <- cmd %+% " " %+% destination
-
-  } else {
-    ## We are probably on some Unix, so search for ping
-    if (file.exists("/sbin/ping")) {
-      ping_file <- "/sbin/ping"
-    } else if (file.exists("/usr/sbin/ping")) {
-      ping_file <- "/usr/sbin/ping"
-    } else if (file.exists("/bin/ping")) {
-      ping_file <- "/bin/ping"
-    } else if (file.exists("/usr/bin/ping")) {
-      ping_file <- "/usr/bin/ping"
-    } else {
-      ping_file <- "ping"
-    }
-    cmd <- ping_file %+% " -W " %+% chr(int(timeout * 1000))
-    if (!continuous) cmd <- cmd %+% " -c " %+% chr(count)
-    cmd <- cmd %+% " " %+% destination
-
+    cmd <- c(
+      "ping",
+      "-W" %+% int(timeout * 1000),
+      if (!continuous) c("-c", count),
+      destination
+    )
   }
 
   list(cmd = cmd, regex = "^.*time=(.+)[ ]?ms.*$")
