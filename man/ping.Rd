@@ -4,8 +4,13 @@
 \alias{ping}
 \title{Ping a remote server, to see if it is alive}
 \usage{
-ping(destination, continuous = FALSE, verbose = continuous, count = 3L,
-  timeout = 1)
+ping(
+  destination,
+  continuous = FALSE,
+  verbose = continuous,
+  count = 3L,
+  timeout = 1
+)
 }
 \arguments{
 \item{destination}{Host name or IP address.}
@@ -22,8 +27,8 @@ pinging.}
 }
 \value{
 Vector of response times. \code{NA} means no response, in
-  seconds. Currently \code{NA}s are always at the end of the vector,
-  and not in their correct position.
+seconds. Currently \code{NA}s are always at the end of the vector,
+and not in their correct position.
 }
 \description{
 This is the classic ping, using ICMP packages. Only the

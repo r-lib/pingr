@@ -11,9 +11,9 @@ is_online(timeout = 0.2)
 }
 \value{
 Possible values: \itemize{
-  \item \code{TRUE} Yes, online.
-  \item \code{FALSE} No, not online.
-  \item \code{"nodns"} We re online, but without a DNS service.
+\item \code{TRUE} Yes, online.
+\item \code{FALSE} No, not online.
+\item \code{"nodns"} We re online, but without a DNS service.
 }
 }
 \description{
