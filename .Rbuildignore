@@ -4,3 +4,5 @@
 ^appveyor.yml$
 ^.travis.yml$
 ^README.Rmd$
+^\.Rprofile$
+^r-packages$
