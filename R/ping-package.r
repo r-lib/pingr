@@ -151,3 +151,20 @@ is_online <- function(timeout = 0.2) {
   }
   return(FALSE)
 }
+
+#' `is_up()` checks if a web server is up.
+#'
+#' @rdname ping_port
+#' @param fail_on_dns_error If `TRUE` then `is_up()` fails if the DNS
+#'   resolution fails. Otherwise it will return `FALSE`.
+#' @export
+
+is_up <- function(destination, port = 80, timeout = 0.5,
+                  fail_on_dns_error = FALSE) {
+  tryCatch(
+    !is.na(ping_port(destination, port = port, timeout = timeout, count = 1)),
+    error = function(e) {
+      if (fail_on_dns_error) stop(e)
+      FALSE
+    })
+}

@@ -13,6 +13,8 @@ ping_port(
   count = 3L,
   timeout = 1
 )
+
+is_up(destination, port = 80, timeout = 0.5, fail_on_dns_error = FALSE)
 }
 \arguments{
 \item{destination}{Host name or IP address.}
@@ -29,10 +31,15 @@ pinging.}
 
 \item{timeout}{Timeout, in seconds. How long to wait for a
 ping to succeed.}
+
+\item{fail_on_dns_error}{If \code{TRUE} then \code{is_up()} fails if the DNS
+resolution fails. Otherwise it will return \code{FALSE}.}
 }
 \value{
 Vector of response times. \code{NA} means no response
 }
 \description{
 Check if a port of a server is active, measure response time
+
+\code{is_up()} checks if a web server is up.
 }
