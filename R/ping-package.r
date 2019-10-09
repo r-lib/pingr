@@ -17,7 +17,8 @@ NULL
 #' @param count Number of pings to perform.
 #' @param timeout Timeout, in seconds. How long to wait for a
 #'   ping to succeed.
-#' @return Vector of response times. \code{NA} means no response
+#' @return Vector of response times, in milliseconds.
+#'   \code{NA} means no response within the timeout.
 #'
 #' @export
 
@@ -48,7 +49,7 @@ ping_port <- function(destination, port = 80L,
 #' @param count Number of pings to perform.
 #' @param timeout Timeout for a ping response.
 #' @return Vector of response times. \code{NA} means no response, in
-#'   seconds. Currently \code{NA}s are always at the end of the vector,
+#'   milliseconds. Currently \code{NA}s are always at the end of the vector,
 #'   and not in their correct position.
 #'
 #' @export

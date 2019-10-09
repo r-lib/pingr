@@ -36,7 +36,8 @@ ping to succeed.}
 resolution fails. Otherwise it will return \code{FALSE}.}
 }
 \value{
-Vector of response times. \code{NA} means no response
+Vector of response times, in milliseconds.
+\code{NA} means no response within the timeout.
 }
 \description{
 Check if a port of a server is active, measure response time

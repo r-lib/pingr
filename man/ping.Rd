@@ -27,7 +27,7 @@ pinging.}
 }
 \value{
 Vector of response times. \code{NA} means no response, in
-seconds. Currently \code{NA}s are always at the end of the vector,
+milliseconds. Currently \code{NA}s are always at the end of the vector,
 and not in their correct position.
 }
 \description{
