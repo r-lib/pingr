@@ -1,5 +1,5 @@
 
-# dev
+# 1.2.0
 
 * New `is_up()` function to check if a web (other other TCP) server is up.
 
