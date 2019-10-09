@@ -98,6 +98,14 @@ ping_os <- function(destination, continuous, count, timeout) {
       destination
     )
 
+  } else if (Sys.info()[["sysname"]] == "Linux") {
+    cmd <- c(
+      "ping",
+      "-W", int(timeout),
+      if (!continuous) c("-c", count),
+      destination
+    )
+
   } else if (.Platform$OS.type == "unix") {
     cmd <- c(
       "ping",
