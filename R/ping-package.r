@@ -21,6 +21,9 @@ NULL
 #'   \code{NA} means no response within the timeout.
 #'
 #' @export
+#' @examples
+#' ping_port("127.0.0.1")
+#' ping_port("r-project.org")
 
 ping_port <- function(destination, port = 80L,
                       continuous = FALSE, verbose = continuous,
@@ -54,6 +57,9 @@ ping_port <- function(destination, port = 80L,
 #'
 #' @export
 #' @importFrom processx run
+#' @examples
+#' ping("8.8.8.8")
+#' ping("r-project.org")
 
 ping <- function(destination, continuous = FALSE, verbose = continuous,
                  count = 3L, timeout = 1.0) {
@@ -139,6 +145,9 @@ internet_ips <- c("8.8.8.8",
 #' }
 #'
 #' @export
+#' @examples
+#' is_online()
+#' is_online(timeout = 0.01)
 
 is_online <- function(timeout = 0.2) {
   for (domain in internet_domains) {
@@ -156,6 +165,9 @@ is_online <- function(timeout = 0.2) {
 #' @param fail_on_dns_error If `TRUE` then `is_up()` fails if the DNS
 #'   resolution fails. Otherwise it will return `FALSE`.
 #' @export
+#' @examples
+#' is_up("google.com")
+#' is_up("google.com", timeout = 0.01)
 
 is_up <- function(destination, port = 80, timeout = 0.5,
                   fail_on_dns_error = FALSE) {

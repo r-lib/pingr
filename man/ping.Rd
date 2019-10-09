@@ -35,3 +35,7 @@ This is the classic ping, using ICMP packages. Only the
 system administrator can send ICMP packages, so we call out
 to the system's ping utility.
 }
+\examples{
+ping("8.8.8.8")
+ping("r-project.org")
+}

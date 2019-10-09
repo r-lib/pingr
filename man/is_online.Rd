@@ -20,3 +20,7 @@ Possible values: \itemize{
 Ping some name servers that are always (well, almost) up.
 If these are unreachable, then you are most probably not online.
 }
+\examples{
+is_online()
+is_online(timeout = 0.01)
+}
