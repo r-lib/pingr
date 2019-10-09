@@ -35,5 +35,5 @@ test_that("We can ping a remote host", {
 test_that("We don't wait too long", {
 
   ## TODO
-
+  expect_true(TRUE)
 })
