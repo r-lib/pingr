@@ -178,3 +178,9 @@ is_up <- function(destination, port = 80, timeout = 0.5,
       FALSE
     })
 }
+
+#' @export
+
+nsl <- function(domain, server = NULL, type = 1L, class = 1L) {
+  .Call("r_nsl", domain, server, class, type)
+}
