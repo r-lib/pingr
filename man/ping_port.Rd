@@ -5,16 +5,11 @@
 \alias{is_up}
 \title{Check if a port of a server is active, measure response time}
 \usage{
-ping_port(
-  destination,
-  port = 80L,
-  continuous = FALSE,
-  verbose = continuous,
-  count = 3L,
-  timeout = 1
-)
+ping_port(destination, port = 80L, continuous = FALSE,
+  verbose = continuous, count = 3L, timeout = 1)
 
-is_up(destination, port = 80, timeout = 0.5, fail_on_dns_error = FALSE)
+is_up(destination, port = 80, timeout = 0.5,
+  fail_on_dns_error = FALSE)
 }
 \arguments{
 \item{destination}{Host name or IP address.}

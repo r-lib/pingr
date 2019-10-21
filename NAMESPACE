@@ -2,6 +2,7 @@
 
 export(is_online)
 export(is_up)
+export(nsl)
 export(ping)
 export(ping_port)
 importFrom(processx,run)
