@@ -147,6 +147,12 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
+#include <arpa/nameser.h>
+
+#ifdef __sun
+#define u_int16_t uint16_t
+#define u_int32_t uint32_t
+#endif
 
 // See https://docstore.mik.ua/orelly/networking_2ndEd/dns/ch15_02.htm
 // for the documentation of the ns_* functions, because these are
