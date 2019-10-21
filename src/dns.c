@@ -1,4 +1,8 @@
 
+#ifdef _WIN32
+#include <Winsock2.h>
+#endif
+
 #include "pingr.h"
 #include "errors.h"
 
@@ -6,13 +10,6 @@
 
 #include <windows.h>
 #include <windns.h>
-
-PCSTR inet_ntop(
-  INT        Family,
-  const VOID *pAddr,
-  PSTR       pStringBuf,
-  size_t     StringBufSize
-);
 
 #define AF_INET6 23
 
@@ -86,11 +83,11 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
 
     switch(ptr->wType) {
     case DNS_TYPE_A:
-      inet_ntop(AF_INET, &(ptr->Data.A.IpAddress), buf, sizeof buf);
+      inet_ntoa(AF_INET, &(ptr->Data.A.IpAddress), buf, sizeof buf);
       break;
 
     case DNS_TYPE_AAAA:
-      inet_ntop(AF_INET6, &(ptr->Data.AAAA.Ip6Address), buf, sizeof buf);
+      inet_ntoa(AF_INET6, &(ptr->Data.AAAA.Ip6Address), buf, sizeof buf);
       break;
 
     case DNS_TYPE_NS:
