@@ -20,7 +20,6 @@
 #'
 #' @export
 #' @examples
-#' ping_port("127.0.0.1")
 #' ping_port("r-project.org")
 
 ping_port <- function(destination, port = 80L,
