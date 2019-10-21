@@ -14,11 +14,8 @@ knitr::opts_chunk$set(
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/github/r-lib/pingr?svg=true)](https://ci.appveyor.com/project/gaborcsardi/pingr)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/pingr)](https://r-pkg.org/pkg/pingr)
 
-
-The pingr package is a simple utility that can be used to check
-if a remote machine is running, by sending network packets to it.
-It is similar to the command line `ping` program, in fact for ICMP
-packages it just calls `ping`.
+The pingr package has tools to check if a remote computer or web server is
+up and some other related tools.
 
 ## ICMP ping
 
@@ -52,3 +49,29 @@ google's search web server is up and running:
 ```{r}
 ping_port("www.google.com", port = 80, count = 1)
 ```
+
+## Query the public IP address of the computer
+
+`my_ip()` queries the public IP of the computer, either via DNS or HTTPS:
+
+```{r}
+my_ip()
+```
+
+## Check if the computer is online
+
+`is_online()` checks if the computer is online. It makes three tries:
+
+* Queries myip.opendns.com on OpenDNS, see `my_ip()`.
+* Retrieves icanhazip.com via HTTPS, see `my_ip()`.
+* Retrieve Apple's Captive Portal test page, see `apple_captive_test()`.
+
+If any of these are successful, it returns `TRUE`.
+
+```{r}
+is_online()
+```
+
+## License
+
+MIT © RStudio
