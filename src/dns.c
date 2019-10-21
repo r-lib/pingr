@@ -139,6 +139,7 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
   PDNS_RECORD response, ptr;
   DNS_STATUS ret;
   PIP4_ARRAY pSrvList = NULL;
+  IN_ADDR ipaddr;
   int cnt = 0;
   const char *resnames[] = { "answer", "flags", "" };
   const char *recnames[] = { "name", "class", "type", "ttl", "data", "" };
