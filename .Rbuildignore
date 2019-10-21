@@ -6,3 +6,4 @@
 ^README.Rmd$
 ^\.Rprofile$
 ^r-packages$
+^revdep$

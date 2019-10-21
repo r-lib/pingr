@@ -2,3 +2,4 @@
 /src/pingr.so
 /src/*.o
 /r-packages
+/revdep
