@@ -4,9 +4,141 @@
 
 #ifdef _WIN32
 
+#include <windows.h>
+#include <windns.h>
+
+PCSTR inet_ntop(
+  INT        Family,
+  const VOID *pAddr,
+  PSTR       pStringBuf,
+  size_t     StringBufSize
+);
+
+#define AF_INET6 23
+
 SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
-  error("Not implemented yet");
-  return R_NilValue;
+
+  PDNS_RECORD response, ptr;
+  DNS_STATUS ret;
+  PIP4_ARRAY pSrvList = NULL;
+  int cnt = 0;
+  const char *resnames[] = { "answer", "flags", "" };
+  const char *recnames[] = { "name", "class", "type", "ttl", "data", "" };
+  const char *flagnames[] = { "aa", "tc", "rd", "ra", "ad", "cd", "" };
+  SEXP result = PROTECT(mkNamed(VECSXP, resnames));
+  SEXP records = PROTECT(mkNamed(VECSXP, recnames));
+  SEXP row_names = PROTECT(Rf_allocVector(INTSXP, 2));
+  Rf_setAttrib(records, R_ClassSymbol, mkString("data.frame"));
+
+  SET_VECTOR_ELT(result, 0, records);
+  SET_VECTOR_ELT(result, 1, mkNamed(LGLSXP, flagnames));
+
+  if (!isNull(server)) {
+    pSrvList = (PIP4_ARRAY) LocalAlloc(LPTR,sizeof(IP4_ARRAY));
+    if (!pSrvList) R_THROW_ERROR("DNS query failed, out of memory");
+    pSrvList->AddrCount = 1;
+    pSrvList->AddrArray[0] = inet_addr(CHAR(STRING_ELT(server, 0)));
+  }
+
+  ret = DnsQuery_A(
+    CHAR(STRING_ELT(hostname, 0)),
+    INTEGER(type)[0],
+    DNS_QUERY_STANDARD,
+    pSrvList,
+    &response,
+    NULL
+  );
+
+  if (ret) R_THROW_SYSTEM_ERROR_CODE(ret, "DNS query failed");
+
+  ptr = response;
+  while (ptr) {
+    cnt ++;
+    ptr = ptr->pNext;
+  }
+
+  SET_VECTOR_ELT(records, 0, Rf_allocVector(STRSXP, cnt));
+  SET_VECTOR_ELT(records, 1, Rf_allocVector(INTSXP, cnt));
+  SET_VECTOR_ELT(records, 2, Rf_allocVector(INTSXP, cnt));
+  SET_VECTOR_ELT(records, 3, Rf_allocVector(INTSXP, cnt));
+  SET_VECTOR_ELT(records, 4, Rf_allocVector(VECSXP, cnt));
+  INTEGER(row_names)[0] = NA_INTEGER;
+  INTEGER(row_names)[1] = -cnt;
+  Rf_setAttrib(records, R_RowNamesSymbol, row_names);
+
+  LOGICAL(VECTOR_ELT(result, 1))[0] = NA_LOGICAL;
+  LOGICAL(VECTOR_ELT(result, 1))[1] = NA_LOGICAL;
+  LOGICAL(VECTOR_ELT(result, 1))[2] = NA_LOGICAL;
+  LOGICAL(VECTOR_ELT(result, 1))[3] = NA_LOGICAL;
+  LOGICAL(VECTOR_ELT(result, 1))[4] = NA_LOGICAL;
+  LOGICAL(VECTOR_ELT(result, 1))[5] = NA_LOGICAL;
+
+  ptr = response; cnt = 0;
+  while (ptr) {
+    char buf[1025];
+    int raw = 0;
+    SEXP rawdata;
+
+    SET_STRING_ELT(VECTOR_ELT(records, 0), cnt, mkChar(ptr->pName));
+    INTEGER(VECTOR_ELT(records, 1))[cnt] = 1L;
+    INTEGER(VECTOR_ELT(records, 2))[cnt] = (int) ptr->wType;
+    INTEGER(VECTOR_ELT(records, 3))[cnt] = (int) ptr->dwTtl;
+
+    switch(ptr->wType) {
+    case DNS_TYPE_A:
+      inet_ntop(AF_INET, &(ptr->Data.A.IpAddress), buf, sizeof buf);
+      break;
+
+    case DNS_TYPE_AAAA:
+      inet_ntop(AF_INET6, &(ptr->Data.AAAA.Ip6Address), buf, sizeof buf);
+      break;
+
+    case DNS_TYPE_NS:
+    case DNS_TYPE_PTR:
+    case DNS_TYPE_CNAME:
+      snprintf(buf, sizeof buf, "%s", ptr->Data.PTR.pNameHost);
+      break;
+
+    case DNS_TYPE_TEXT:
+      snprintf(buf, sizeof buf, "%s", ptr->Data.TXT.pStringArray[0]);
+      break;
+
+    case DNS_TYPE_MX:
+      snprintf(buf, sizeof buf, "%s", ptr->Data.MX.pNameExchange);
+      break;
+
+    case DNS_TYPE_SOA:
+      snprintf(buf, sizeof buf, "%s. %s. %u %u %u %u %u",
+	       ptr->Data.SOA.pNamePrimaryServer,
+	       ptr->Data.SOA.pNameAdministrator,
+	       ptr->Data.SOA.dwSerialNo,
+	       ptr->Data.SOA.dwRefresh,
+	       ptr->Data.SOA.dwRetry,
+	       ptr->Data.SOA.dwExpire,
+	       ptr->Data.SOA.dwDefaultTtl);
+      break;
+
+    default:
+      raw = 1;
+      rawdata = PROTECT(Rf_allocVector(RAWSXP, ptr->wDataLength));
+      SET_VECTOR_ELT(VECTOR_ELT(records, 4), cnt, rawdata);
+      UNPROTECT(1);
+      memcpy(RAW(rawdata), &(ptr->Data.A), ptr->wDataLength);
+      break;
+    }
+
+    if (!raw) SET_VECTOR_ELT(VECTOR_ELT(records, 4), cnt, mkString(buf));
+
+    cnt++;
+    ptr = ptr->pNext;
+  }
+
+  /* TODO: these leak on error, we would need to use cleancall */
+  LocalFree(pSrvList);
+  DnsRecordListFree(response, DnsFreeRecordList);
+
+  UNPROTECT(3);
+  return result;
 }
 
 #else
@@ -161,8 +293,7 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
       SET_VECTOR_ELT(VECTOR_ELT(records, 4), i, rawdata);
       UNPROTECT(1);
       memcpy(RAW(rawdata), ns_rr_rdata(rec), ns_rr_rdlen(rec));
-      continue;
-      ;;
+      break;
     }
 
     if (ret < 0) {
