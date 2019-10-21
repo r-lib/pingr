@@ -32,8 +32,8 @@ ping_port <- function(destination, port = 80L,
   type <- "tcp"
   type <- switch(type, "tcp" = 0L, "udp" = 1L)
   timeout <- as.integer(timeout * 1000000)
-  res <- .Call("r_ping", destination, port, type, continuous, verbose,
-               count, timeout, PACKAGE = "pingr")
+  res <- .Call(r_ping, destination, port, type, continuous, verbose,
+               count, timeout)
   res[ res == -1 ] <- NA_real_
   res
 }
@@ -182,5 +182,5 @@ is_up <- function(destination, port = 80, timeout = 0.5,
 #' @export
 
 nsl <- function(domain, server = NULL, type = 1L, class = 1L) {
-  .Call("r_nsl", domain, server, class, type)
+  .Call(r_nsl, domain, server, class, type)
 }
