@@ -164,13 +164,19 @@ is_online <- function(timeout = 0.2) {
 #' @rdname ping_port
 #' @param fail_on_dns_error If `TRUE` then `is_up()` fails if the DNS
 #'   resolution fails. Otherwise it will return `FALSE`.
+#' @param check_online Whether to check first if the computer is online.
+#'   Otherwise it is possible that the computer is behind a proxy, that
+#'   hijacks the HTTP connection to `destination`.
 #' @export
 #' @examples
 #' is_up("google.com")
 #' is_up("google.com", timeout = 0.01)
 
 is_up <- function(destination, port = 80, timeout = 0.5,
-                  fail_on_dns_error = FALSE) {
+                  fail_on_dns_error = FALSE, check_online = TRUE) {
+
+  if (check_online && ! is_online(timeout)) return(FALSE)
+
   tryCatch(
     !is.na(ping_port(destination, port = port, timeout = timeout, count = 1)),
     error = function(e) {
