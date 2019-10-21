@@ -2,8 +2,23 @@
 % Please edit documentation in R/ping-package.r
 \docType{package}
 \name{pingr-package}
+\alias{pingr}
 \alias{pingr-package}
-\title{Check if a remote computer is up}
+\title{Check if the local or remote computer is up}
 \description{
-Check if a remote computer is up
+Check if a remote computer is up. It can either
+    just call the system ping command, or check a specified
+    TCP port.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/r-lib/pingr#readme}
+  \item Report bugs at \url{https://github.com/r-lib/pingr/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Gábor Csárdi \email{csardi.gabor@gmail.com}
+
 }

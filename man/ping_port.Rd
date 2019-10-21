@@ -5,16 +5,11 @@
 \alias{is_up}
 \title{Check if a port of a server is active, measure response time}
 \usage{
-ping_port(
-  destination,
-  port = 80L,
-  continuous = FALSE,
-  verbose = continuous,
-  count = 3L,
-  timeout = 1
-)
+ping_port(destination, port = 80L, continuous = FALSE,
+  verbose = continuous, count = 3L, timeout = 1)
 
-is_up(destination, port = 80, timeout = 0.5, fail_on_dns_error = FALSE)
+is_up(destination, port = 80, timeout = 0.5,
+  fail_on_dns_error = FALSE, check_online = TRUE)
 }
 \arguments{
 \item{destination}{Host name or IP address.}
@@ -34,6 +29,10 @@ ping to succeed.}
 
 \item{fail_on_dns_error}{If \code{TRUE} then \code{is_up()} fails if the DNS
 resolution fails. Otherwise it will return \code{FALSE}.}
+
+\item{check_online}{Whether to check first if the computer is online.
+Otherwise it is possible that the computer is behind a proxy, that
+hijacks the HTTP connection to \code{destination}.}
 }
 \value{
 Vector of response times, in milliseconds.
@@ -45,7 +44,6 @@ Check if a port of a server is active, measure response time
 \code{is_up()} checks if a web server is up.
 }
 \examples{
-ping_port("127.0.0.1")
 ping_port("r-project.org")
 is_up("google.com")
 is_up("google.com", timeout = 0.01)

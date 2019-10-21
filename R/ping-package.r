@@ -1,10 +1,8 @@
 
-#' Check if a remote computer is up
+#' Check if the local or remote computer is up
 #'
-#' @useDynLib pingr, .registration = TRUE, .fixes = "C_"
-#' @docType package
-#' @name pingr-package
-NULL
+#' @useDynLib pingr, .registration = TRUE
+"_PACKAGE"
 
 #' Check if a port of a server is active, measure response time
 #'
@@ -22,7 +20,6 @@ NULL
 #'
 #' @export
 #' @examples
-#' ping_port("127.0.0.1")
 #' ping_port("r-project.org")
 
 ping_port <- function(destination, port = 80L,
@@ -32,8 +29,8 @@ ping_port <- function(destination, port = 80L,
   type <- "tcp"
   type <- switch(type, "tcp" = 0L, "udp" = 1L)
   timeout <- as.integer(timeout * 1000000)
-  res <- .Call("r_ping", destination, port, type, continuous, verbose,
-               count, timeout, PACKAGE = "pingr")
+  res <- .Call(r_ping, destination, port, type, continuous, verbose,
+               count, timeout)
   res[ res == -1 ] <- NA_real_
   res
 }
@@ -112,6 +109,17 @@ ping_os <- function(destination, continuous, count, timeout) {
       destination
     )
 
+  } else if (Sys.info()[["sysname"]] == "SunOS") {
+    if (timeout != 1.0) {
+      warning("Ping `timeout` is not supported on Solaris")
+    }
+    cmd <- c(
+      "/usr/sbin/ping",
+      "-s",
+      destination,
+      if (!continuous) c("56", count)
+    )
+
   } else if (.Platform$OS.type == "unix") {
     cmd <- c(
       "ping",
@@ -124,39 +132,44 @@ ping_os <- function(destination, continuous, count, timeout) {
   list(cmd = cmd, regex = "^.*time=(.+)[ ]?ms.*$")
 }
 
-## Domains and IPs to test for internet connection
-
-internet_domains <- c("google-public-dns-a.google.com",
-                      "b.resolvers.Level3.net")
-
-internet_ips <- c("8.8.8.8",
-                  "4.2.2.2")
-
 #' Is the computer online?
 #'
-#' Ping some name servers that are always (well, almost) up.
-#' If these are unreachable, then you are most probably not online.
+#' Check if the computer is online. It does three tries:
+#' * Queries myip.opendns.com on OpenDNS, see [my_ip()].
+#' * Retrieves icanhazip.com via HTTPS, see [my_ip()].
+#' * Retrieve Apple's Captive Portal test page, see [apple_captive_test()].
+#' If any of these are successful, it returns `TRUE`.
 #'
-#' @param timeout Timeout for the pings.
+#' @param timeout Timeout for the queries. (Note: it is currently not
+#'   used for the DNS query.)
 #' @return Possible values: \itemize{
 #'   \item \code{TRUE} Yes, online.
 #'   \item \code{FALSE} No, not online.
-#'   \item \code{"nodns"} We re online, but without a DNS service.
 #' }
 #'
 #' @export
 #' @examples
 #' is_online()
-#' is_online(timeout = 0.01)
 
-is_online <- function(timeout = 0.2) {
-  for (domain in internet_domains) {
-    if (!is.na(ping(domain, count = 1, timeout = timeout))) { return(TRUE) }
-  }
-  for (ip in internet_ips) {
-    if (!is.na(ping(ip, count = 1, timeout = timeout))) { return("nodns") }
-  }
-  return(FALSE)
+is_online <- function(timeout = 1) {
+  opts <- options(timeout = timeout)
+  on.exit(options(opts), add = TRUE)
+
+  tryCatch({
+    my_ip(method = "dns")
+    return(TRUE)
+  }, error = function(e) NULL)
+
+  tryCatch({
+    my_ip(method = "https")
+    return(TRUE)
+  }, error = function(e) NULL)
+
+  tryCatch({
+    if (apple_captive_test()) return(TRUE)
+  }, error = function(e) NULL)
+
+  FALSE
 }
 
 #' `is_up()` checks if a web server is up.
@@ -164,13 +177,19 @@ is_online <- function(timeout = 0.2) {
 #' @rdname ping_port
 #' @param fail_on_dns_error If `TRUE` then `is_up()` fails if the DNS
 #'   resolution fails. Otherwise it will return `FALSE`.
+#' @param check_online Whether to check first if the computer is online.
+#'   Otherwise it is possible that the computer is behind a proxy, that
+#'   hijacks the HTTP connection to `destination`.
 #' @export
 #' @examples
 #' is_up("google.com")
 #' is_up("google.com", timeout = 0.01)
 
 is_up <- function(destination, port = 80, timeout = 0.5,
-                  fail_on_dns_error = FALSE) {
+                  fail_on_dns_error = FALSE, check_online = TRUE) {
+
+  if (check_online && ! is_online(timeout)) return(FALSE)
+
   tryCatch(
     !is.na(ping_port(destination, port = port, timeout = timeout, count = 1)),
     error = function(e) {

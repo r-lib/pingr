@@ -3,6 +3,8 @@
 #include <Rdefines.h>
 #include <R_ext/Rdynload.h>
 
+#include "pingr.h"
+
 #ifdef WIN32
 
 #  define WIN32_LEAN_AND_MEAN
@@ -209,15 +211,4 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
 
   UNPROTECT(1);
   return result;
-}
-
-static const R_CallMethodDef callMethods[]  = {
-  {"r_ping", (DL_FUNC) &r_ping, 7},
-  {NULL, NULL, 0}
-};
-
-void R_init_parsedate(DllInfo *dll) {
-  R_registerRoutines(dll, NULL, callMethods, NULL, NULL);
-  R_useDynamicSymbols(dll, FALSE);
-  R_forceSymbols(dll, TRUE);
 }

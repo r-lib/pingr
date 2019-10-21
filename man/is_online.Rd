@@ -4,23 +4,27 @@
 \alias{is_online}
 \title{Is the computer online?}
 \usage{
-is_online(timeout = 0.2)
+is_online(timeout = 1)
 }
 \arguments{
-\item{timeout}{Timeout for the pings.}
+\item{timeout}{Timeout for the queries. (Note: it is currently not
+used for the DNS query.)}
 }
 \value{
 Possible values: \itemize{
 \item \code{TRUE} Yes, online.
 \item \code{FALSE} No, not online.
-\item \code{"nodns"} We re online, but without a DNS service.
 }
 }
 \description{
-Ping some name servers that are always (well, almost) up.
-If these are unreachable, then you are most probably not online.
+Check if the computer is online. It does three tries:
+\itemize{
+\item Queries myip.opendns.com on OpenDNS, see \code{\link[=my_ip]{my_ip()}}.
+\item Retrieves icanhazip.com via HTTPS, see \code{\link[=my_ip]{my_ip()}}.
+\item Retrieve Apple's Captive Portal test page, see \code{\link[=apple_captive_test]{apple_captive_test()}}.
+If any of these are successful, it returns \code{TRUE}.
+}
 }
 \examples{
 is_online()
-is_online(timeout = 0.01)
 }
