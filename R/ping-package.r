@@ -110,6 +110,17 @@ ping_os <- function(destination, continuous, count, timeout) {
       destination
     )
 
+  } else if (Sys.info()[["sysname"]] == "SunOS") {
+    if (timeout != 1.0) {
+      warning("Ping `timeout` is not supported on Solaris")
+    }
+    cmd <- c(
+      "/usr/sbin/ping",
+      "-s",
+      destination,
+      if (!continuous) c("56", count)
+    )
+
   } else if (.Platform$OS.type == "unix") {
     cmd <- c(
       "ping",
