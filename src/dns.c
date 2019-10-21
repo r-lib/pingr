@@ -271,6 +271,17 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
 #ifdef __sun
 #define u_int16_t uint16_t
 #define u_int32_t uint32_t
+static int xxns_name_uncompress(const u_char *msg, const u_char *eom,
+                                const u_char *src, char *dst, size_t dstsiz) {
+  u_char tmp[NS_MAXCDNAME];
+  int n;
+
+  if ((n = ns_name_unpack(msg, eom, src, tmp, sizeof tmp)) == -1) return -1;
+  if (ns_name_ntop(tmp, dst, dstsiz) == -1) return -1;
+  return n;
+}
+#else
+#define xxns_name_uncompress ns_name_uncompress
 #endif
 
 // See https://docstore.mik.ua/orelly/networking_2ndEd/dns/ch15_02.htm
@@ -368,8 +379,8 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
     case ns_t_ns:
     case ns_t_ptr:
     case ns_t_cname:
-      ret = ns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
-                               data, buf, sizeof buf);
+      ret = xxns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
+                                 data, buf, sizeof buf);
       break;
 
     case ns_t_txt:
@@ -378,16 +389,16 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
 
     case ns_t_mx:
       NS_GET16(mx, data);
-      ret = ns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
-                               data, buf, sizeof buf);
+      ret = xxns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
+                                 data, buf, sizeof buf);
       break;
 
     case ns_t_soa: {
       char *buf2 = buf;
       size_t bufsize = sizeof buf;
       int len, j;
-      ret = ns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
-                               data, buf, sizeof buf);
+      ret = xxns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
+                                 data, buf, sizeof buf);
       if (ret < 0) R_THROW_SYSTEM_ERROR("Cannot parse SOA DNS record");
 
       data += ret; len = strlen(buf2); buf2 += len; bufsize -= len;
@@ -395,8 +406,8 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
         *buf2 = '.'; buf2++; bufsize--; *buf2 = ' '; buf2++; bufsize--;
       }
 
-      ret = ns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
-                               data, buf2, bufsize);
+      ret = xxns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
+                                 data, buf2, bufsize);
       if (ret < 0) R_THROW_SYSTEM_ERROR("Cannot parse SOA DNS record");
 
       data += ret; len = strlen(buf2); buf2 += len; bufsize -= len;
