@@ -72,6 +72,16 @@ If any of these are successful, it returns `TRUE`.
 is_online()
 ```
 
+## DNS queries
+
+The package also contains a function to perform DNS queries. This is a
+more portable and more functional version of the `utils::nsl()` function:
+
+```{r}
+nsl("www.r-project.org", type = 1L)
+nsl("google.com", type = 28L)
+```
+
 ## License
 
 MIT © RStudio

@@ -80,6 +80,37 @@ is_online()
 
     #> [1] TRUE
 
+## DNS queries
+
+The package also contains a function to perform DNS queries. This is a
+more portable and more functional version of the `utils::nsl()`
+function:
+
+``` r
+nsl("www.r-project.org", type = 1L)
+```
+
+    #> $answer
+    #>                 name class type ttl               data
+    #> 1  www.r-project.org     1    5 900 cran.wu-wien.ac.at
+    #> 2 cran.wu-wien.ac.at     1    1 300      137.208.57.37
+    #> 
+    #> $flags
+    #>    aa    tc    rd    ra    ad    cd 
+    #> FALSE FALSE  TRUE  TRUE FALSE FALSE
+
+``` r
+nsl("google.com", type = 28L)
+```
+
+    #> $answer
+    #>         name class type ttl                     data
+    #> 1 google.com     1   28 110 2a00:1450:4009:81a::200e
+    #> 
+    #> $flags
+    #>    aa    tc    rd    ra    ad    cd 
+    #> FALSE FALSE  TRUE  TRUE FALSE FALSE
+
 ## License
 
 MIT © RStudio
