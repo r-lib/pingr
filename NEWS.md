@@ -1,4 +1,6 @@
 
+# Development version
+
 # 2.0.0
 
 * New `nsl()` function to perform DNS queries.
