@@ -1,6 +1,6 @@
 Package: pingr
 Title: Check if a Remote Computer is Up
-Version: 2.0.0.9000
+Version: 2.0.1
 Authors@R: person(given = "Gábor", family = "Csárdi", role = c("aut", "cre"),
              email = "csardi.gabor@gmail.com")
 Description: Check if a remote computer is up. It can either
