@@ -26,9 +26,9 @@
 #'   * `flags`: a named logical vector of flags `aa`, `tc`, `rd`, `ra`,
 #'     `ad`, `cd`. See the RFC (https://www.ietf.org/rfc/rfc1035.txt) for
 #'      these. On Windows they are all set to NA currently.
-#' 
+#'
 #' @export
-#' @examples
+#' @examplesIf pingr:::safe_examples()
 #' nsl("r-project.org")
 #' nsl("google.com", type = 28L)
 

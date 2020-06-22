@@ -15,5 +15,7 @@ Note that this function will fail if the computer is offline. Use
 \code{\link[=is_online]{is_online()}} to check if the computer is online.
 }
 \examples{
+\dontshow{if (pingr:::safe_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 apple_captive_test()
+\dontshow{\}) # examplesIf}
 }

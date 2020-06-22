@@ -19,7 +19,7 @@
 #'   \code{NA} means no response within the timeout.
 #'
 #' @export
-#' @examples
+#' @examplesIf pingr:::safe_examples()
 #' ping_port("r-project.org")
 
 ping_port <- function(destination, port = 80L,
@@ -54,7 +54,7 @@ ping_port <- function(destination, port = 80L,
 #'
 #' @export
 #' @importFrom processx run
-#' @examples
+#' @examplesIf pingr:::safe_examples()
 #' ping("8.8.8.8")
 #' ping("r-project.org")
 
@@ -148,7 +148,7 @@ ping_os <- function(destination, continuous, count, timeout) {
 #' }
 #'
 #' @export
-#' @examples
+#' @examplesIf pingr:::safe_examples()
 #' is_online()
 
 is_online <- function(timeout = 1) {
@@ -181,7 +181,7 @@ is_online <- function(timeout = 1) {
 #'   Otherwise it is possible that the computer is behind a proxy, that
 #'   hijacks the HTTP connection to `destination`.
 #' @export
-#' @examples
+#' @examplesIf pingr:::safe_examples()
 #' is_up("google.com")
 #' is_up("google.com", timeout = 0.01)
 

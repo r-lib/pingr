@@ -36,6 +36,8 @@ system administrator can send ICMP packages, so we call out
 to the system's ping utility.
 }
 \examples{
+\dontshow{if (pingr:::safe_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 ping("8.8.8.8")
 ping("r-project.org")
+\dontshow{\}) # examplesIf}
 }

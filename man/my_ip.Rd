@@ -18,6 +18,8 @@ an HTTPS query to icanhazip.com, see https://github.com/major/icanhaz.
 The DNS query is much faster, the HTTPS query is secure.
 }
 \examples{
+\dontshow{if (pingr:::safe_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 my_ip()
 my_ip(method = "https")
+\dontshow{\}) # examplesIf}
 }

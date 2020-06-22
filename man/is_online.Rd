@@ -26,5 +26,7 @@ If any of these are successful, it returns \code{TRUE}.
 }
 }
 \examples{
+\dontshow{if (pingr:::safe_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 is_online()
+\dontshow{\}) # examplesIf}
 }

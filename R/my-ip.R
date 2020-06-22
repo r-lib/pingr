@@ -9,7 +9,7 @@
 #' @return Computer's public IP address as a string.
 #'
 #' @export
-#' @examples
+#' @examplesIf pingr:::safe_examples()
 #' my_ip()
 #' my_ip(method = "https")
 

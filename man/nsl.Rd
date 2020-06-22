@@ -42,6 +42,8 @@ Perform a DNS query for a domain. It supports custom name servers,
 and querying DNS records of certain class and type.
 }
 \examples{
+\dontshow{if (pingr:::safe_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 nsl("r-project.org")
 nsl("google.com", type = 28L)
+\dontshow{\}) # examplesIf}
 }

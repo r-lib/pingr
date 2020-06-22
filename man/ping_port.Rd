@@ -55,7 +55,11 @@ Check if a port of a server is active, measure response time
 \code{is_up()} checks if a web server is up.
 }
 \examples{
+\dontshow{if (pingr:::safe_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 ping_port("r-project.org")
+\dontshow{\}) # examplesIf}
+\dontshow{if (pingr:::safe_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 is_up("google.com")
 is_up("google.com", timeout = 0.01)
+\dontshow{\}) # examplesIf}
 }

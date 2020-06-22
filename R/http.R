@@ -19,7 +19,7 @@ http_get <- function(url) {
 #' [is_online()] to check if the computer is online.
 #'
 #' @export
-#' @examples
+#' @examplesIf pingr:::safe_examples()
 #' apple_captive_test()
 
 apple_captive_test <- function() {

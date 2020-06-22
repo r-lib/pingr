@@ -17,5 +17,5 @@ Imports:
     processx,
     utils
 RoxygenNote: 7.1.0.9000
-Roxygen: list(markdown = TRUE)
+Roxygen: list(packages = "roxygenlabs", markdown = TRUE)
 Encoding: UTF-8
