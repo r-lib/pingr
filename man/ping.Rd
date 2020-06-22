@@ -4,8 +4,13 @@
 \alias{ping}
 \title{Ping a remote server, to see if it is alive}
 \usage{
-ping(destination, continuous = FALSE, verbose = continuous,
-  count = 3L, timeout = 1)
+ping(
+  destination,
+  continuous = FALSE,
+  verbose = continuous,
+  count = 3L,
+  timeout = 1
+)
 }
 \arguments{
 \item{destination}{Host name or IP address.}
