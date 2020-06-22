@@ -135,9 +135,9 @@ ping_os <- function(destination, continuous, count, timeout) {
 #' Is the computer online?
 #'
 #' Check if the computer is online. It does three tries:
+#' * Retrieve Apple's Captive Portal test page, see [apple_captive_test()].
 #' * Queries myip.opendns.com on OpenDNS, see [my_ip()].
 #' * Retrieves icanhazip.com via HTTPS, see [my_ip()].
-#' * Retrieve Apple's Captive Portal test page, see [apple_captive_test()].
 #' If any of these are successful, it returns `TRUE`.
 #'
 #' @param timeout Timeout for the queries. (Note: it is currently not
@@ -156,6 +156,10 @@ is_online <- function(timeout = 1) {
   on.exit(options(opts), add = TRUE)
 
   tryCatch({
+    if (apple_captive_test()) return(TRUE)
+  }, error = function(e) NULL)
+
+  tryCatch({
     my_ip(method = "dns")
     return(TRUE)
   }, error = function(e) NULL)
@@ -163,10 +167,6 @@ is_online <- function(timeout = 1) {
   tryCatch({
     my_ip(method = "https")
     return(TRUE)
-  }, error = function(e) NULL)
-
-  tryCatch({
-    if (apple_captive_test()) return(TRUE)
   }, error = function(e) NULL)
 
   FALSE

@@ -1,6 +1,9 @@
 
 # Development version
 
+* `is_online()` now tries the Apple captive test first, because it works better
+  when DNS is not masked, but HTTP is (#13).
+
 # 2.0.0
 
 * New `nsl()` function to perform DNS queries.
