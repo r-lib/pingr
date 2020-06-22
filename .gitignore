@@ -3,3 +3,4 @@
 /src/*.o
 /r-packages
 /revdep
+.Rproj.user

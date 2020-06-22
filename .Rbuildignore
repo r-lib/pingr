@@ -7,3 +7,5 @@
 ^\.Rprofile$
 ^r-packages$
 ^revdep$
+^.*\.Rproj$
+^\.Rproj\.user$
