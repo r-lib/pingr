@@ -40,6 +40,10 @@ void usleep(__int64 usec) {
 #  define WINCLEANUP()
 #endif
 
+#ifdef __FreeBSD__
+#include <netinet/in.h> // This needs to be before resolv.h for FreeBSD, see #19
+#endif
+
 #include <sys/types.h>
 #include <sys/time.h>
 #include <errno.h>
