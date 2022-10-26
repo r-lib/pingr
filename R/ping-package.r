@@ -67,7 +67,7 @@ ping <- function(destination, continuous = FALSE, verbose = continuous,
 
   os <- ping_os(destination, continuous, count, timeout)
 
-  status <- run(os$cmd[1], os$cmd[-1], error_on_status = FALSE)
+  status <- run(os$cmd[1], os$cmd[-1], error_on_status = FALSE, env = os$env)
   output <- strsplit(status$stdout, "\r?\n")[[1]]
 
   if (!continuous) {
@@ -82,6 +82,8 @@ ping <- function(destination, continuous = FALSE, verbose = continuous,
 }
 
 ping_os <- function(destination, continuous, count, timeout) {
+
+  env <- NULL
 
   if (.Platform$OS.type == "windows") {
     ping_file <- file.path("C:", "windows", "system32", "ping.exe")
@@ -108,6 +110,7 @@ ping_os <- function(destination, continuous, count, timeout) {
       if (!continuous) c("-c", count),
       destination
     )
+    env <- c("current", LC_ALL = "C")
 
   } else if (Sys.info()[["sysname"]] == "SunOS") {
     if (timeout != 1.0) {
@@ -129,7 +132,7 @@ ping_os <- function(destination, continuous, count, timeout) {
     )
   }
 
-  list(cmd = cmd, regex = "^.*time=(.+)[ ]?ms.*$")
+  list(cmd = cmd, env = env, regex = "^.*time=(.+)[ ]?ms.*$")
 }
 
 #' Is the computer online?

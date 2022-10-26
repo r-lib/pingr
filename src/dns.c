@@ -230,11 +230,11 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
       snprintf(buf, sizeof buf, "%s. %s. %u %u %u %u %u",
 	       ptr->Data.SOA.pNamePrimaryServer,
 	       ptr->Data.SOA.pNameAdministrator,
-	       ptr->Data.SOA.dwSerialNo,
-	       ptr->Data.SOA.dwRefresh,
-	       ptr->Data.SOA.dwRetry,
-	       ptr->Data.SOA.dwExpire,
-	       ptr->Data.SOA.dwDefaultTtl);
+	       (unsigned int) ptr->Data.SOA.dwSerialNo,
+	       (unsigned int) ptr->Data.SOA.dwRefresh,
+	       (unsigned int) ptr->Data.SOA.dwRetry,
+	       (unsigned int) ptr->Data.SOA.dwExpire,
+	       (unsigned int) ptr->Data.SOA.dwDefaultTtl);
       break;
 
     default:
