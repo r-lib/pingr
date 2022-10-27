@@ -1,3 +1,5 @@
+# pingr (development version)
+
 # pingr 2.0.2
 
 * `pingr::ping()` now works better in a non-English locale (#18).
