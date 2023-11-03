@@ -1,6 +1,3 @@
-
-context("TCP")
-
 test_that("We can ping localhost", {
 
   ## Chances are, there is nothing here

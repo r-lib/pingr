@@ -1,6 +1,3 @@
-
-context("ICMP")
-
 test_that("We can ping localhost", {
 
   if (Sys.getenv("APPVEYOR") == "") {
