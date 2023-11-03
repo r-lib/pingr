@@ -1,15 +1,16 @@
 
+
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/r-lib/pingr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/pingr/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/r-lib/pingr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/pingr?branch=main)
+[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/pingr)](https://r-pkg.org/pkg/pingr)
+<!-- badges: end -->
+
 # pingr: check if a server is alive
 
-[![Linux Build
-Status](https://travis-ci.org/r-lib/pingr.svg?branch=master)](https://travis-ci.org/r-lib/pingr)
-[![Windows Build
-status](https://ci.appveyor.com/api/projects/status/github/r-lib/pingr?svg=true)](https://ci.appveyor.com/project/gaborcsardi/pingr)
-[![CRAN RStudio mirror
-downloads](http://cranlogs.r-pkg.org/badges/pingr)](https://r-pkg.org/pkg/pingr)
-
-The pingr package has tools to check if a remote computer or web server
-is up and some other related tools.
+The pingr package has tools to check if a remote computer or web server is
+up and some other related tools.
 
 ## ICMP ping
 
