@@ -51,7 +51,7 @@ ping("127.0.0.1")
 ```
 
 ```
-#> [1] 0.076 0.236 0.226
+#> [1] 0.087 0.301 0.206
 ```
 
 By default it sends three packets and measures the time it receives and answer.
@@ -64,7 +64,7 @@ ping("127.0.0.1", count = 1)
 ```
 
 ```
-#> [1] 0.125
+#> [1] 0.182
 ```
 
 If a machine is down (or it does not exist), then `NA` is returned instead
@@ -90,7 +90,7 @@ ping_port("www.google.com", port = 80, count = 1)
 ```
 
 ```
-#> [1] 19.825
+#> [1] 19.228
 ```
 
 ## Query the public IP address of the computer
@@ -138,7 +138,7 @@ nsl("www.r-project.org", type = 1L)
 ```
 #> $answer
 #>                 name class type  ttl               data
-#> 1  www.r-project.org     1    5 4235 cran.wu-wien.ac.at
+#> 1  www.r-project.org     1    5 6525 cran.wu-wien.ac.at
 #> 2 cran.wu-wien.ac.at     1    1  300      137.208.57.37
 #> 
 #> $flags
@@ -153,7 +153,7 @@ nsl("google.com", type = 28L)
 ```
 #> $answer
 #>         name class type ttl                     data
-#> 1 google.com     1   28 216 2a00:1450:4003:80f::200e
+#> 1 google.com     1   28 210 2a00:1450:4003:80f::200e
 #> 
 #> $flags
 #>    aa    tc    rd    ra    ad    cd 
