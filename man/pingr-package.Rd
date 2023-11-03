@@ -30,5 +30,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Gábor Csárdi \email{csardi.gabor@gmail.com}
 
+Other contributors:
+\itemize{
+  \item Posit Software, PBC [copyright holder, funder]
+}
+
 }
 \keyword{internal}
