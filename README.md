@@ -12,6 +12,20 @@
 The pingr package has tools to check if a remote computer or web server is
 up and some other related tools.
 
+## Installation
+
+Install the package from CRAN:
+
+```r
+install.packages("pingr")
+```
+
+If you need the development version, install it from GitHub:
+
+```r
+pak::pak("r-lib/pingr")
+```
+
 ## ICMP ping
 
 The `ping()` function does ICMP ping, via the system's `ping` utility:
