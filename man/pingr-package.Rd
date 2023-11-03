@@ -6,14 +6,13 @@
 \alias{pingr-package}
 \title{Check if the local or remote computer is up}
 \description{
-Check if a remote computer is up. It can either
-    just call the system ping command, or check a specified
-    TCP port.
+Check if a remote computer is up. It can either just call the system ping command, or check a specified TCP port.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/r-lib/pingr#readme}
+  \item \url{https://r-lib.github.io/pingr/}
   \item Report bugs at \url{https://github.com/r-lib/pingr/issues}
 }
 
