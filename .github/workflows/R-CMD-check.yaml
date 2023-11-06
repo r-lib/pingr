@@ -57,6 +57,11 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Install command line ping on Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y iputils-ping
+
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
