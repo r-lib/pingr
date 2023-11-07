@@ -61,6 +61,8 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get install -y iputils-ping
+          ping -W 5 -c 1 google.com
+          ping -W 5 -c 1 8.8.8.8
 
       - uses: r-lib/actions/check-r-package@v2
         with:
