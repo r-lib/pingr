@@ -7,6 +7,9 @@ test_that("We can ping localhost", {
 
 test_that("We can ping a remote host", {
 
+  ## can't ping google.com from GHA...
+  testthat::skip_on_ci()
+
   ## Non-existent IP
   pr <- ping("0.0.0.1", count = 1)
   print(pr)
