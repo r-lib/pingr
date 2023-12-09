@@ -98,8 +98,8 @@ SEXP r_ping(SEXP p_destination, SEXP p_port, SEXP p_type, SEXP p_continuous,
   WINCLEANUP();
 
   if (verbose) {
-    Rprintf("TCP PING %s (%s) Port:\n", destination, inet_ntoa(ip_address),
-	    port);
+    Rprintf("TCP PING %s (%s) Port: %d.\n", destination,
+      inet_ntoa(ip_address), port);
   }
 
   /* ---------------------------------------------------------------- */
