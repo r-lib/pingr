@@ -8,7 +8,7 @@ Authors@R: c(
 Description: Check if a remote computer is up. It can either just call the
     system ping command, or check a specified TCP port.
 License: MIT + file LICENSE
-URL: https://github.com/r-lib/pingr#readme, https://r-lib.github.io/pingr/
+URL: https://r-lib.github.io/pingr/, https://github.com/r-lib/pingr
 BugReports: https://github.com/r-lib/pingr/issues
 Depends: 
     R (>= 3.6)
