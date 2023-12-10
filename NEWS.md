@@ -1,5 +1,7 @@
 # pingr (development version)
 
+* `ping_port()` now correctly printf the port if `version = TRUE`.
+
 # pingr 2.0.2
 
 * `pingr::ping()` now works better in a non-English locale (#18).
