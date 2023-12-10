@@ -13,16 +13,16 @@ Check if a remote computer is up. It can either just call the system ping comman
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/r-lib/pingr#readme}
   \item \url{https://r-lib.github.io/pingr/}
+  \item \url{https://github.com/r-lib/pingr}
   \item Report bugs at \url{https://github.com/r-lib/pingr/issues}
 }
 
 
 Useful links:
 \itemize{
-  \item \url{https://github.com/r-lib/pingr#readme}
   \item \url{https://r-lib.github.io/pingr/}
+  \item \url{https://github.com/r-lib/pingr}
   \item Report bugs at \url{https://github.com/r-lib/pingr/issues}
 }
 
