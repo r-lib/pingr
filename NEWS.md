@@ -1,6 +1,6 @@
 # pingr (development version)
 
-* `ping_port()` now correctly printf the port if `version = TRUE`.
+* `ping_port()` now correctly prints the port if `version = TRUE`.
 
 # pingr 2.0.2
 
