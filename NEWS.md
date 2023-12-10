@@ -1,4 +1,4 @@
-# pingr (development version)
+# pingr 2.0.3
 
 * `ping_port()` now correctly prints the port if `version = TRUE`.
 
