@@ -262,8 +262,8 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
 
 #else
 
+#include <netinet/in.h> // This needs to be before resolv.h for FreeBSD, see #19
 #include <resolv.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <arpa/nameser.h>
