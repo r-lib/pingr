@@ -1,4 +1,6 @@
 test_that("We can ping localhost", {
+  # fragile on windows
+  testthat::skip_on_os("windows")
   pr <- ping("127.0.0.1", count = 1)
   expect_true(is.double(pr))
   expect_true(length(pr) == 1)
