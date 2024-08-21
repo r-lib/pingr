@@ -72,7 +72,7 @@ ping <- function(destination, continuous = FALSE, verbose = continuous,
 
   if (!continuous) {
     timings <- grep(os$regex, output, value = TRUE, perl = TRUE)
-    times <- sub(os$regex, "\\1", timings, perl = TRUE)
+    times <- sub(os$regex, "\\2", timings, perl = TRUE)
     res <- as.numeric(times)
     length(res) <- count
     res
@@ -132,7 +132,7 @@ ping_os <- function(destination, continuous, count, timeout) {
     )
   }
 
-  list(cmd = cmd, env = env, regex = "^.*time=(.+)[ ]?ms.*$")
+  list(cmd = cmd, env = env, regex = "^.*time(=|<)(.+)[ ]?ms.*$")
 }
 
 #' Is the computer online?

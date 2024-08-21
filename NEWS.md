@@ -1,5 +1,7 @@
 # pingr (development version)
 
+* `ping()` now handles sub-millisecond response times (#24).
+
 # pingr 2.0.3
 
 * `ping_port()` now correctly prints the port if `version = TRUE`.
