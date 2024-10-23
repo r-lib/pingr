@@ -20,7 +20,6 @@ jobs:
   freebsd:
     runs-on: ubuntu-latest
     steps:
-      - uses: r-hub/actions/debug-shell@main
       - uses: actions/checkout@v4
       - uses: r-hub/actions/setup-r-freebsd@main
         with:
@@ -37,6 +36,8 @@ jobs:
           find.package("pak")
           Sys.getenv()
         shell: Rscript {0}
+
+      - uses: r-hub/actions/debug-shell@main
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
