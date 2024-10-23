@@ -35,6 +35,7 @@ void usleep(__int64 usec) {
 #  include <unistd.h>
 #  include <netdb.h>
 #  include <arpa/inet.h>
+#  include <netinet/in.h>
 #  include <fcntl.h>
 #  define WINSTARTUP()
 #  define WINCLEANUP()
