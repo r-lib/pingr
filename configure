@@ -1,0 +1,88 @@
+#! /usr/bin/env sh
+
+# Check that this is not just ./configure. We need to run this
+# from R CMD INSTALL, to have the R env vars set.
+
+if [ -z "$R_HOME" ]; then
+    echo >&2 R_HOME is not set, are you running R CMD INSTALL?
+    exit 1
+fi
+
+# Find the R binary we need to use. This is a bit trickier on
+# Windows, because it has two architectures. On windows R_ARCH_BIN
+# is set, so this should work everywhere.
+RBIN="${R_HOME}/bin${R_ARCH_BIN}/R"
+
+# ------------------------------------------------------------------------
+# Detect system
+# ------------------------------------------------------------------------
+
+unset POSIX
+if [ "$R_OSTYPE" = "unix" ]; then
+    UNAME=`uname`
+else
+    UNAME=Windows
+fi
+
+if [ -n "$EMSCRIPTEN" ] && [ -n "$CROSS_COMPILE" ]; then
+    UNAME=Emscripten
+fi
+
+unset WINDOWS
+if [ "$R_OSTYPE" = "windows" ]; then WINDOWS=true; fi
+
+unset LINUX
+if [ "$UNAME" = "Linux" ]; then LINUX=true; POSIX=true; fi
+
+unset MACOS
+if [ "$UNAME" = "Darwin" ]; then MACOS=true; POSIX=true; fi
+
+unset FREEBSD
+if [ "$UNAME" = "FreeBSD" ]; then FREEBSD=true; POSIX=true; fi
+
+unset OPENBSD
+## if [ "$UNAME" = "OpenBSD" ]; then OPENBSD=true; POSIX=true; fi
+
+unset NETBSD
+## if [ "$UNAME" = "NetBSD" ]; then NETBSD=true; POSIX=true; fi
+
+unset BSD
+if [ -n "$FREEBSD" ] || [ -n "$OPENBSD" ] || [ -n "$NETBSD" ]; then
+    BSD=true
+fi
+
+unset SUNOS
+## if [ "UNAME" = "SunOS" ]; then SUNOS=true; POSIX=true; fi
+
+unset AIX
+##  if [ "UNAME" = "AIX" ]; then AIX=true; POSIX=true; fi
+
+# ------------------------------------------------------------------------
+# Set source files, macros, libs, compile flags
+# ------------------------------------------------------------------------
+
+if [ -n "$WINDOWS" ]; then
+    LIBRARIES=
+
+elif [ -n "$FREEBSD" ]; then
+    LIBRARIES=
+
+else
+    LIBRARIES=resolv
+fi
+
+# ------------------------------------------------------------------------
+# Create Makevars file
+# ------------------------------------------------------------------------
+
+# OBJECTS (= source files)
+# LIBRARIES -> PKG_LIBS
+
+LIBS=`for l in $LIBRARIES; do echo "-l${l}"; done | tr "\n", " "`
+LIBS="${LIBS} $FRAMEWORKS"
+
+cat src/Makevars.in | \
+    sed "s|@OBJECTS@|${OBJECTS}|" | \
+    sed "s/@LIBS@/${LIBS}/" | \
+    sed "s/@TARGETS@/${TARGETS}/" | \
+    sed "s|@EXTRA@|${EXTRA}|" > src/Makevars
