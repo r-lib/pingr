@@ -126,7 +126,7 @@ ping_os <- function(destination, continuous, count, timeout) {
   } else if (Sys.info()[["sysname"]] == "OpenBSD") {
     cmd <- c(
       "ping",
-      "-w", int(timeout * 1000),
+      "-w", int(timeout),
       if (!continuous) c("-c", count),
       destination
     )
