@@ -2,6 +2,10 @@
 #ifdef _WIN32
 #include <Winsock2.h>
 #include <ws2tcpip.h>
+#else
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/nameser.h>
 #endif
 
 #undef ERROR

@@ -41,7 +41,7 @@ unset FREEBSD
 if [ "$UNAME" = "FreeBSD" ]; then FREEBSD=true; POSIX=true; fi
 
 unset OPENBSD
-## if [ "$UNAME" = "OpenBSD" ]; then OPENBSD=true; POSIX=true; fi
+if [ "$UNAME" = "OpenBSD" ]; then OPENBSD=true; POSIX=true; fi
 
 unset NETBSD
 ## if [ "$UNAME" = "NetBSD" ]; then NETBSD=true; POSIX=true; fi
@@ -61,11 +61,18 @@ unset AIX
 # Set source files, macros, libs, compile flags
 # ------------------------------------------------------------------------
 
+CPPFLAGS=
+
 if [ -n "$WINDOWS" ]; then
     LIBRARIES=
 
 elif [ -n "$FREEBSD" ]; then
     LIBRARIES=
+
+elif [ -n "$OPENBSD" ]; then
+    LIBRARIES=bind
+    LIBDIRS=-L/usr/local/lib/libbind
+    CPPFLAGS=-I/usr/local/include/bind
 
 else
     LIBRARIES=resolv
@@ -79,10 +86,11 @@ fi
 # LIBRARIES -> PKG_LIBS
 
 LIBS=`for l in $LIBRARIES; do echo "-l${l}"; done | tr "\n", " "`
-LIBS="${LIBS} $FRAMEWORKS"
+LIBS="$LIBDIRS ${LIBS} $FRAMEWORKS"
 
 cat src/Makevars.in | \
     sed "s|@OBJECTS@|${OBJECTS}|" | \
-    sed "s/@LIBS@/${LIBS}/" | \
-    sed "s/@TARGETS@/${TARGETS}/" | \
+    sed "s|@LIBS@|${LIBS}|" | \
+    sed "s|@TARGETS@|${TARGETS}|" | \
+    sed "s|@CPPFLAGS@|${CPPFLAGS}|" | \
     sed "s|@EXTRA@|${EXTRA}|" > src/Makevars

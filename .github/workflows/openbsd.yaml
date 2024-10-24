@@ -28,14 +28,18 @@ jobs:
           R.version[["platform"]]
           .libPaths()
           .Library
-          Sys.getenv("R_LIBS_SITE")
-          Sys.getenv("R_LIBS_USER")
           find.package("pak")
           Sys.getenv()
         shell: Rscript {0}
 
       - uses: r-hub/actions/debug-shell@main
 
+      - name: Install system packages
+        run: |
+          pkg_add -I libbind
+          cd /usr/local/lib && ln -s libbind/libbind.so* .
+        shell: openbsd {0}
+        
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           pak-version: none
