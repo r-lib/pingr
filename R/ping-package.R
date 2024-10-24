@@ -123,6 +123,14 @@ ping_os <- function(destination, continuous, count, timeout) {
       if (!continuous) c("56", count)
     )
 
+  } else if (Sys.info()[["sysname"]] == "OpenBSD") {
+    cmd <- c(
+      "ping",
+      "-w", int(timeout * 1000),
+      if (!continuous) c("-c", count),
+      destination
+    )
+
   } else if (.Platform$OS.type == "unix") {
     cmd <- c(
       "ping",
