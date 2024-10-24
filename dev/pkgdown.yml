@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-10-24T11:13Z
+last_built: 2024-10-24T11:15Z
 urls:
   reference: http://r-lib.github.io/pingr/reference
   article: http://r-lib.github.io/pingr/articles
