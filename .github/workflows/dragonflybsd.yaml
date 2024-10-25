@@ -41,7 +41,12 @@ jobs:
           install-pandoc: false
           install-quarto: false
           cache-version: dragonflybsd-1
-          extra-packages: any::rcmdcheck, r-lib/fs, jeroen/openssl, spelling=?ignore
+          extra-packages: |
+            any::rcmdcheck
+            r-lib/fs
+            jeroen/openssl
+            spelling=?ignore
+            sodium=?ignore
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
