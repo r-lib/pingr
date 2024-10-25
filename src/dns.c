@@ -308,18 +308,21 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
   SET_VECTOR_ELT(result, 0, records);
   SET_VECTOR_ELT(result, 1, mkNamed(LGLSXP, flagnames));
 
-  ret = res_init();
+  struct __res_state state;
+  res_state statep = &state;
+  ret = res_ninit(statep);
   if (ret) R_THROW_SYSTEM_ERROR("Failed to initialize resolver library");
 
   if (!isNull(server)) {
     struct in_addr addr;
     ret = inet_pton(AF_INET, CHAR(STRING_ELT(server, 0)), &addr);
-    _res.options &= ~(RES_DNSRCH | RES_DEFNAMES);
-    _res.nscount = LENGTH(server);
-    _res.nsaddr_list[0].sin_addr = addr;
+    statep->options &= ~(RES_DNSRCH | RES_DEFNAMES);
+    statep->nscount = LENGTH(server);
+    statep->nsaddr_list[0].sin_addr = addr;
   }
 
-  ret = res_query(
+  ret = res_nquery(
+    statep,
     CHAR(STRING_ELT(hostname, 0)),
     INTEGER(class)[0],
     INTEGER(type)[0],
@@ -443,6 +446,7 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
     if (!raw) SET_VECTOR_ELT(VECTOR_ELT(records, 4), i, mkString(buf));
   }
 
+  res_nclose(statep);
   UNPROTECT(3);
   return result;
 }
