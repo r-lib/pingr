@@ -308,27 +308,37 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
   SET_VECTOR_ELT(result, 0, records);
   SET_VECTOR_ELT(result, 1, mkNamed(LGLSXP, flagnames));
 
-  ret = res_init();
+  struct __res_state state;
+  res_state statep = &state;
+  memset(statep, 0, sizeof(state));
+  ret = res_ninit(statep);
   if (ret) R_THROW_SYSTEM_ERROR("Failed to initialize resolver library");
 
   if (!isNull(server)) {
     struct in_addr addr;
     ret = inet_pton(AF_INET, CHAR(STRING_ELT(server, 0)), &addr);
-    _res.options &= ~(RES_DNSRCH | RES_DEFNAMES);
-    _res.nscount = LENGTH(server);
-    _res.nsaddr_list[0].sin_addr = addr;
+    statep->options &= ~(RES_DNSRCH | RES_DEFNAMES);
+    statep->nscount = LENGTH(server);
+    statep->nsaddr_list[0].sin_addr = addr;
   }
 
-  ret = res_query(
+  ret = res_nquery(
+    statep,
     CHAR(STRING_ELT(hostname, 0)),
     INTEGER(class)[0],
     INTEGER(type)[0],
     answer,
     sizeof answer);
-  if (ret == -1) R_THROW_SYSTEM_ERROR("DNS query failed");
+  if (ret == -1) {
+    res_nclose(statep);
+    R_THROW_SYSTEM_ERROR("DNS query failed");
+  }
 
   ret = ns_initparse(answer, ret, &msg);
-  if (ret == -1) R_THROW_SYSTEM_ERROR("Cannot parse DNS answer");
+  if (ret == -1) {
+    res_nclose(statep);
+    R_THROW_SYSTEM_ERROR("Cannot parse DNS answer");
+  }
 
   LOGICAL(VECTOR_ELT(result, 1))[0] = ns_msg_getflag(msg, ns_f_aa);
   LOGICAL(VECTOR_ELT(result, 1))[1] = ns_msg_getflag(msg, ns_f_tc);
@@ -358,7 +368,10 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
     SEXP rawdata;
 
     ret = ns_parserr(&msg, ns_s_an, i, &rec);
-    if (ret == -1) R_THROW_SYSTEM_ERROR("Cannot parse DNS record");
+    if (ret == -1) {
+      res_nclose(statep);
+      R_THROW_SYSTEM_ERROR("Cannot parse DNS record");
+    }
     class = ns_rr_class(rec);
     type = ns_rr_type(rec);
     data = ns_rr_rdata(rec);
@@ -403,7 +416,10 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
       int len, j;
       ret = xxns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
                                  data, buf, sizeof buf);
-      if (ret < 0) R_THROW_SYSTEM_ERROR("Cannot parse SOA DNS record");
+      if (ret < 0) {
+        res_nclose(statep);
+        R_THROW_SYSTEM_ERROR("Cannot parse SOA DNS record");
+      }
 
       data += ret; len = strlen(buf2); buf2 += len; bufsize -= len;
       if (bufsize > 2) {
@@ -412,7 +428,10 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
 
       ret = xxns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
                                  data, buf2, bufsize);
-      if (ret < 0) R_THROW_SYSTEM_ERROR("Cannot parse SOA DNS record");
+      if (ret < 0) {
+        res_nclose(statep);
+        R_THROW_SYSTEM_ERROR("Cannot parse SOA DNS record");
+      }
 
       data += ret; len = strlen(buf2); buf2 += len; bufsize -= len;
       if (bufsize > 2) {
@@ -420,6 +439,7 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
       }
 
       if (ns_msg_end(msg) - data < 5*NS_INT32SZ) {
+        res_nclose(statep);
         R_THROW_ERROR("Cannot parse SOA DNS record");
       }
       for (j = 0; j < 5; j++) NS_GET32(soa[j], data);
@@ -437,12 +457,14 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
     }
 
     if (ret < 0) {
+      res_nclose(statep);
       R_THROW_SYSTEM_ERROR("Cannot parse NS/PTR/CNAME DNS record");
     }
 
     if (!raw) SET_VECTOR_ELT(VECTOR_ELT(records, 4), i, mkString(buf));
   }
 
+  res_nclose(statep);
   UNPROTECT(3);
   return result;
 }
