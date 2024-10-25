@@ -23,6 +23,8 @@ jobs:
         with:
           release: ${{ github.event.inputs.release || '6.4.0' }}
 
+      - uses: r-hub/actions/debug-shell@main
+
       - name: Test R in DragonFlyBSD VM
         run: |
           getRversion()
@@ -32,8 +34,6 @@ jobs:
           find.package("pak")
           Sys.getenv()
         shell: Rscript {0}
-
-      - uses: r-hub/actions/debug-shell@main
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
