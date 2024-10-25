@@ -131,6 +131,15 @@ ping_os <- function(destination, continuous, count, timeout) {
       destination
     )
 
+  } else if (Sys.info()[["sysname"]] == "NetBSD") {
+    cmd <- c(
+      "ping",
+      # on NetBSD -w is a total timeout, so adjust it
+      "-w", if (continuous) int(timeout) else count * int(timeout),
+      if (!continuous) c("-c", count),
+      destination
+    )
+
   } else if (.Platform$OS.type == "unix") {
     cmd <- c(
       "ping",
