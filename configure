@@ -46,8 +46,11 @@ if [ "$UNAME" = "OpenBSD" ]; then OPENBSD=true; POSIX=true; fi
 unset NETBSD
 ## if [ "$UNAME" = "NetBSD" ]; then NETBSD=true; POSIX=true; fi
 
+unset DRAGONFLY
+if [ "$UNAME" = "DragonFly" ]; then DRAGONFLY=true; POSIX=true; fi
+
 unset BSD
-if [ -n "$FREEBSD" ] || [ -n "$OPENBSD" ] || [ -n "$NETBSD" ]; then
+if [ -n "$FREEBSD" ] || [ -n "$OPENBSD" ] || [ -n "$NETBSD" ] || [ -n "$DRAGONFLY" ]; then
     BSD=true
 fi
 
@@ -67,6 +70,9 @@ if [ -n "$WINDOWS" ]; then
     LIBRARIES=
 
 elif [ -n "$FREEBSD" ]; then
+    LIBRARIES=
+
+elif [ -n "$DRAGONFLY" ]; then
     LIBRARIES=
 
 elif [ -n "$OPENBSD" ]; then
