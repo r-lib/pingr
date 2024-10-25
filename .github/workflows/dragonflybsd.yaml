@@ -33,7 +33,7 @@ jobs:
           Sys.getenv()
         shell: Rscript {0}
 
-      - uses: r-hub/actions/debug-shell@v1
+      - uses: r-hub/actions/debug-shell@main
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
