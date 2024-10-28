@@ -1,4 +1,4 @@
-# pingr (development version)
+# pingr 2.0.4
 
 * `ping()` now handles sub-millisecond response times (#24).
 
