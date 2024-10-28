@@ -19,8 +19,6 @@ Suggests:
     covr,
     ps,
     testthat (>= 3.0.0)
-Remotes:
-    r-lib/ps
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Encoding: UTF-8
