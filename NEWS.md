@@ -2,6 +2,8 @@
 
 * `ping()` now handles sub-millisecond response times (#24).
 
+* `ping()` now works on FreeBSD, OpenBSD, NetBSD and DragonFlyBSD.
+
 # pingr 2.0.3
 
 * `ping_port()` now correctly prints the port if `version = TRUE`.
