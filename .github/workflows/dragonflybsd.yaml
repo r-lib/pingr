@@ -47,6 +47,7 @@ jobs:
             jeroen/openssl
             spelling=?ignore
             sodium=?ignore
+            r-lib/ps
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
