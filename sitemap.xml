@@ -1,48 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>http://r-lib.github.io/pingr/404.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/authors.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/index.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/news/index.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/reference/apple_captive_test.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/reference/is_online.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/reference/my_ip.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/reference/nsl.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/reference/ping.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/reference/ping_port.html</loc>
-  </url>
-  <url>
-    <loc>http://r-lib.github.io/pingr/reference/pingr-package.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>http://r-lib.github.io/pingr/404.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/LICENSE-text.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/LICENSE.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/authors.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/index.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/news/index.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/reference/apple_captive_test.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/reference/index.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/reference/is_online.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/reference/my_ip.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/reference/nsl.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/reference/ping.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/reference/ping_port.html</loc></url>
+<url><loc>http://r-lib.github.io/pingr/reference/pingr-package.html</loc></url>
 </urlset>
+
