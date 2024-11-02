@@ -308,10 +308,15 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
   SET_VECTOR_ELT(result, 0, records);
   SET_VECTOR_ELT(result, 1, mkNamed(LGLSXP, flagnames));
 
+#if (__RES >= 19991006)
   struct __res_state state;
   res_state statep = &state;
   memset(statep, 0, sizeof(state));
   ret = res_ninit(statep);
+#else
+  res_state statep = &_res;
+  ret = res_init();
+#endif
   if (ret) R_THROW_SYSTEM_ERROR("Failed to initialize resolver library");
 
   if (!isNull(server)) {
@@ -322,21 +327,29 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
     statep->nsaddr_list[0].sin_addr = addr;
   }
 
+#if (__RES >= 19991006)
   ret = res_nquery(
     statep,
+#else
+  ret = res_query(
+#endif
     CHAR(STRING_ELT(hostname, 0)),
     INTEGER(class)[0],
     INTEGER(type)[0],
     answer,
     sizeof answer);
   if (ret == -1) {
+#if (__RES >= 19991006)
     res_nclose(statep);
+#endif
     R_THROW_SYSTEM_ERROR("DNS query failed");
   }
 
   ret = ns_initparse(answer, ret, &msg);
   if (ret == -1) {
+#if (__RES >= 19991006)
     res_nclose(statep);
+#endif
     R_THROW_SYSTEM_ERROR("Cannot parse DNS answer");
   }
 
@@ -369,7 +382,9 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
 
     ret = ns_parserr(&msg, ns_s_an, i, &rec);
     if (ret == -1) {
+#if (__RES >= 19991006)
       res_nclose(statep);
+#endif
       R_THROW_SYSTEM_ERROR("Cannot parse DNS record");
     }
     class = ns_rr_class(rec);
@@ -417,7 +432,9 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
       ret = xxns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
                                  data, buf, sizeof buf);
       if (ret < 0) {
+#if (__RES >= 19991006)
         res_nclose(statep);
+#endif
         R_THROW_SYSTEM_ERROR("Cannot parse SOA DNS record");
       }
 
@@ -429,7 +446,9 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
       ret = xxns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
                                  data, buf2, bufsize);
       if (ret < 0) {
+#if (__RES >= 19991006)
         res_nclose(statep);
+#endif
         R_THROW_SYSTEM_ERROR("Cannot parse SOA DNS record");
       }
 
@@ -439,7 +458,9 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
       }
 
       if (ns_msg_end(msg) - data < 5*NS_INT32SZ) {
+#if (__RES >= 19991006)
         res_nclose(statep);
+#endif
         R_THROW_ERROR("Cannot parse SOA DNS record");
       }
       for (j = 0; j < 5; j++) NS_GET32(soa[j], data);
@@ -457,14 +478,18 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
     }
 
     if (ret < 0) {
+#if (__RES >= 19991006)
       res_nclose(statep);
+#endif
       R_THROW_SYSTEM_ERROR("Cannot parse NS/PTR/CNAME DNS record");
     }
 
     if (!raw) SET_VECTOR_ELT(VECTOR_ELT(records, 4), i, mkString(buf));
   }
 
+#if (__RES >= 19991006)
   res_nclose(statep);
+#endif
   UNPROTECT(3);
   return result;
 }
