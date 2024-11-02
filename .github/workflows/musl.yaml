@@ -28,9 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install compilers
+      - name: Install compilers, system libs
         run: |
-          apk add gcc musl-dev g++
+          apk add gcc musl-dev g++ curl-dev
         shell: bash
 
       - uses: r-lib/actions/setup-r-dependencies@v2
