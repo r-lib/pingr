@@ -17,7 +17,7 @@ permissions: read-all
 
 jobs:
   R-CMD-check:
-    name: Alpine 3.20
+    name: Alpine 3.19
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/r-hub/r-minimal/r-minimal:latest
@@ -27,6 +27,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install compilers, system libs
+        run: |
+          apk add gcc musl-dev g++ curl-dev linux-headers checkbashisms
+        shell: bash
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -39,3 +44,5 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+        env:
+          _R_SHLIB_STRIP_: false
