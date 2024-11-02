@@ -30,7 +30,7 @@ jobs:
 
       - name: Install compilers, system libs
         run: |
-          apk add gcc musl-dev g++ curl-dev linux-headers
+          apk add gcc musl-dev g++ curl-dev linux-headers checkbashisms
         shell: bash
 
       - uses: r-lib/actions/setup-r-dependencies@v2
@@ -44,3 +44,5 @@ jobs:
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+        env:
+          _R_SHLIB_STRIP_: false
