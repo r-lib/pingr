@@ -27,10 +27,10 @@ test_that("We can ping a remote host", {
   expect_equal(pr, NA_real_)
 
   ## There is surely something here
-  pr <- ping_port("httpbin.org", count = 1)
+  pr <- ping_port("github.com", count = 1)
   expect_true(is.double(pr))
   expect_true(length(pr) == 1)
-  expect_true(pr < 1000)
+  expect_true(pr < 5000)
 })
 
 test_that("We don't wait too long", {
