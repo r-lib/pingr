@@ -3,6 +3,14 @@ test_that("We can ping localhost", {
   pr <- ping_port("127.0.0.1", port = 4695, count = 1)
   expect_equal(pr, NA_real_)
 
+  if (
+    .Platform$OS.type == "windows" &&
+      .Platform$r_arch == "i386" &&
+      getRversion() < "4.0.0"
+  ) {
+    skip("does not work on old i386 windows R")
+  }
+
   ## Start web server
   r_httpd_port <- if (R.version[["svn rev"]] < 67550) {
     try(tools::startDynamicHelp(TRUE), silent = TRUE)
