@@ -1,4 +1,6 @@
-
+---
+output: github_document
+---
 ```{r}
 #| label: setup
 #| echo: false
@@ -13,8 +15,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/r-lib/pingr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/pingr/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/r-lib/pingr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/pingr?branch=main)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/pingr)](https://r-pkg.org/pkg/pingr)
+[![Codecov test coverage](https://codecov.io/gh/r-lib/pingr/graph/badge.svg)](https://app.codecov.io/gh/r-lib/pingr)
 <!-- badges: end -->
 
 # pingr: check if a server is alive
