@@ -1,4 +1,3 @@
-
 #' Check if the local or remote computer is up
 #'
 #' @useDynLib pingr, .registration = TRUE
@@ -22,16 +21,28 @@
 #' @examplesIf pingr:::safe_examples()
 #' ping_port("r-project.org")
 
-ping_port <- function(destination, port = 80L,
-                      continuous = FALSE, verbose = continuous,
-                      count = 3L, timeout = 1.0) {
-
+ping_port <- function(
+  destination,
+  port = 80L,
+  continuous = FALSE,
+  verbose = continuous,
+  count = 3L,
+  timeout = 1.0
+) {
   type <- "tcp"
   type <- switch(type, "tcp" = 0L, "udp" = 1L)
   timeout <- as.integer(timeout * 1000000)
-  res <- .Call(r_ping, destination, port, type, continuous, verbose,
-               count, timeout)
-  res[ res == -1 ] <- NA_real_
+  res <- .Call(
+    r_ping,
+    destination,
+    port,
+    type,
+    continuous,
+    verbose,
+    count,
+    timeout
+  )
+  res[res == -1] <- NA_real_
   res
 }
 
@@ -58,9 +69,13 @@ ping_port <- function(destination, port = 80L,
 #' ping("8.8.8.8")
 #' ping("r-project.org")
 
-ping <- function(destination, continuous = FALSE, verbose = continuous,
-                 count = 3L, timeout = 1.0) {
-
+ping <- function(
+  destination,
+  continuous = FALSE,
+  verbose = continuous,
+  count = 3L,
+  timeout = 1.0
+) {
   if (!continuous && verbose) {
     stop("'!continuous' && 'verbose' does not work currently")
   }
@@ -82,36 +97,37 @@ ping <- function(destination, continuous = FALSE, verbose = continuous,
 }
 
 ping_os <- function(destination, continuous, count, timeout) {
-
   env <- NULL
 
   if (.Platform$OS.type == "windows") {
     ping_file <- file.path("C:", "windows", "system32", "ping.exe")
-    if (!file.exists(ping_file)) { ping_file <- "ping" }
+    if (!file.exists(ping_file)) {
+      ping_file <- "ping"
+    }
     cmd <- c(
       ping_file,
-      "-w", int(timeout * 1000),
+      "-w",
+      int(timeout * 1000),
       if (continuous) "-t" else c("-n", count),
       destination
     )
-
   } else if (Sys.info()["sysname"] == "Darwin") {
     cmd <- c(
       "/sbin/ping",
-      "-W", int(timeout * 1000),
+      "-W",
+      int(timeout * 1000),
       if (!continuous) c("-c", count),
       destination
     )
-
   } else if (Sys.info()[["sysname"]] == "Linux") {
     cmd <- c(
       "ping",
-      "-W", int(timeout),
+      "-W",
+      int(timeout),
       if (!continuous) c("-c", count),
       destination
     )
     env <- c("current", LC_ALL = "C")
-
   } else if (Sys.info()[["sysname"]] == "SunOS") {
     if (timeout != 1.0) {
       warning("Ping `timeout` is not supported on Solaris")
@@ -122,28 +138,28 @@ ping_os <- function(destination, continuous, count, timeout) {
       destination,
       if (!continuous) c("56", count)
     )
-
   } else if (Sys.info()[["sysname"]] == "OpenBSD") {
     cmd <- c(
       "ping",
-      "-w", int(timeout),
+      "-w",
+      int(timeout),
       if (!continuous) c("-c", count),
       destination
     )
-
   } else if (Sys.info()[["sysname"]] == "NetBSD") {
     cmd <- c(
       "ping",
       # on NetBSD -w is a total timeout, so adjust it
-      "-w", if (continuous) int(timeout) else count * int(timeout),
+      "-w",
+      if (continuous) int(timeout) else count * int(timeout),
       if (!continuous) c("-c", count),
       destination
     )
-
   } else if (.Platform$OS.type == "unix") {
     cmd <- c(
       "ping",
-      "-W", int(timeout * 1000),
+      "-W",
+      int(timeout * 1000),
       if (!continuous) c("-c", count),
       destination
     )
@@ -175,19 +191,28 @@ is_online <- function(timeout = 1) {
   opts <- options(timeout = timeout)
   on.exit(options(opts), add = TRUE)
 
-  tryCatch({
-    if (apple_captive_test()) return(TRUE)
-  }, error = function(e) NULL)
+  tryCatch(
+    {
+      if (apple_captive_test()) return(TRUE)
+    },
+    error = function(e) NULL
+  )
 
-  tryCatch({
-    my_ip(method = "dns")
-    return(TRUE)
-  }, error = function(e) NULL)
+  tryCatch(
+    {
+      my_ip(method = "dns")
+      return(TRUE)
+    },
+    error = function(e) NULL
+  )
 
-  tryCatch({
-    my_ip(method = "https")
-    return(TRUE)
-  }, error = function(e) NULL)
+  tryCatch(
+    {
+      my_ip(method = "https")
+      return(TRUE)
+    },
+    error = function(e) NULL
+  )
 
   FALSE
 }
@@ -205,15 +230,20 @@ is_online <- function(timeout = 1) {
 #' is_up("google.com")
 #' is_up("google.com", timeout = 0.01)
 
-is_up <- function(destination, port = 80, timeout = 0.5,
-                  fail_on_dns_error = FALSE, check_online = TRUE) {
-
-  if (check_online && ! is_online(timeout)) return(FALSE)
+is_up <- function(
+  destination,
+  port = 80,
+  timeout = 0.5,
+  fail_on_dns_error = FALSE,
+  check_online = TRUE
+) {
+  if (check_online && !is_online(timeout)) return(FALSE)
 
   tryCatch(
     !is.na(ping_port(destination, port = port, timeout = timeout, count = 1)),
     error = function(e) {
       if (fail_on_dns_error) stop(e)
       FALSE
-    })
+    }
+  )
 }

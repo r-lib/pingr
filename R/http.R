@@ -1,4 +1,3 @@
-
 http_get <- function(url) {
   tmp <- tempfile()
   on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
