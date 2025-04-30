@@ -8,7 +8,6 @@ test_that("We can ping localhost", {
 })
 
 test_that("We can ping a remote host", {
-
   ## can't ping google.com from GHA...
   testthat::skip_on_ci()
 
@@ -32,7 +31,6 @@ test_that("We can ping a remote host", {
 })
 
 test_that("We don't wait too long", {
-
   ## TODO
   expect_true(TRUE)
 })

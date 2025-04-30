@@ -1,4 +1,3 @@
-
 #' Query the computer's public IP address
 #'
 #' It can use a DNS query to opendns.com, if `method == "dns"`, or
@@ -20,9 +19,11 @@ my_ip <- function(method = c("dns", "https")) {
 
 my_ip_dns <- function() {
   out <- nsl("myip.opendns.com", server = "208.67.222.222", type = 1L)
-  if (nrow(out$answer) != 1 ||
+  if (
+    nrow(out$answer) != 1 ||
       out$answer$type != 1L ||
-      !is_ip_address(out$answer$data[[1]])) {
+      !is_ip_address(out$answer$data[[1]])
+  ) {
     stop("Cannot query my iP address via DNS")
   }
 

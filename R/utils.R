@@ -1,4 +1,3 @@
-
 int <- as.integer
 
 is_string <- function(x) {
@@ -25,7 +24,7 @@ safe_examples <- function() {
   !is_cran_check() && is_online()
 }
 
-is_cran_check <- function () {
+is_cran_check <- function() {
   if (identical(Sys.getenv("NOT_CRAN"), "true")) {
     FALSE
   } else {

@@ -1,4 +1,3 @@
-
 #' DNS query
 #'
 #' Perform a DNS query for a domain. It supports custom name servers,

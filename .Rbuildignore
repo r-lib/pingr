@@ -16,3 +16,5 @@
 ^\.github$
 ^codecov\.yml$
 ^src/Makevars$
+^[\.]?air\.toml$
+^\.vscode$

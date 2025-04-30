@@ -1,11 +1,10 @@
 test_that("We can ping localhost", {
-
   ## Chances are, there is nothing here
   pr <- ping_port("127.0.0.1", port = 4695, count = 1)
   expect_equal(pr, NA_real_)
 
   ## Start web server
-  r_httpd_port <- if(R.version[["svn rev"]] < 67550) {
+  r_httpd_port <- if (R.version[["svn rev"]] < 67550) {
     try(tools::startDynamicHelp(TRUE), silent = TRUE)
     getFromNamespace("httpdPort", "tools")
   } else {
@@ -21,7 +20,6 @@ test_that("We can ping localhost", {
 })
 
 test_that("We can ping a remote host", {
-
   ## There is surely nothing here
   pr <- ping_port("igraph.org", port = 4695, count = 1)
   expect_equal(pr, NA_real_)
@@ -34,13 +32,11 @@ test_that("We can ping a remote host", {
 })
 
 test_that("We don't wait too long", {
-
   ## TODO
   expect_true(TRUE)
 })
 
 test_that("We don't wait for the resolver", {
-
   ## TODO
   expect_true(TRUE)
 })
