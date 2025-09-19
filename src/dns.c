@@ -476,7 +476,7 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
                soa[0], soa[1], soa[2], soa[3], soa[4]);
       break; }
 
-    case ns_t_srv: {
+    case ns_t_srv:
       u_int16_t priority, weight, port;
       char target[NS_MAXDNAME];
 
@@ -493,7 +493,7 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
       }
 
       snprintf(buf, sizeof buf, "%u %u %u %s", priority, weight, port, target);
-      break; }
+      break;
 
     default:
       raw = 1;
