@@ -491,7 +491,6 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
 #endif
         R_THROW_SYSTEM_ERROR("Cannot parse SRV target hostname");
       }
-
       snprintf(buf, sizeof buf, "%u %u %u %s", priority, weight, port, target);
       break;
 
