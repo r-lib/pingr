@@ -75,6 +75,9 @@ elif [ -n "$FREEBSD" ]; then
 elif [ -n "$DRAGONFLY" ]; then
     LIBRARIES=
 
+elif [ -n "$EMSCRIPTEN" ]; then
+    LIBRARIES=
+
 elif [ -n "$OPENBSD" ]; then
     LIBRARIES=bind
     LIBDIRS=-L/usr/local/lib/libbind
