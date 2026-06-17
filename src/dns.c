@@ -241,6 +241,14 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
 	       (unsigned int) ptr->Data.SOA.dwDefaultTtl);
       break;
 
+    case DNS_TYPE_SRV:
+      snprintf(buf, sizeof buf, "%u %u %u %s",
+               ptr->Data.SRV.wPriority,
+               ptr->Data.SRV.wWeight,
+               ptr->Data.SRV.wPort,
+               ptr->Data.SRV.pNameTarget);
+      break;
+
     default:
       raw = 1;
       rawdata = PROTECT(Rf_allocVector(RAWSXP, ptr->wDataLength));
@@ -467,6 +475,24 @@ SEXP r_nsl(SEXP hostname, SEXP server, SEXP class, SEXP type) {
       snprintf(buf2, bufsize, "%u %u %u %u %u",
                soa[0], soa[1], soa[2], soa[3], soa[4]);
       break; }
+
+    case ns_t_srv:
+      u_int16_t priority, weight, port;
+      char target[NS_MAXDNAME];
+
+      NS_GET16(priority, data);
+      NS_GET16(weight, data);
+      NS_GET16(port, data);
+      ret = xxns_name_uncompress(ns_msg_base(msg), ns_msg_end(msg),
+                                 data, target, sizeof target);
+      if (ret < 0) {
+#if (__RES >= 19991006)
+        res_nclose(statep);
+#endif
+        R_THROW_SYSTEM_ERROR("Cannot parse SRV target hostname");
+      }
+      snprintf(buf, sizeof buf, "%u %u %u %s", priority, weight, port, target);
+      break;
 
     default:
       raw = 1;
